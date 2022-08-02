@@ -23,7 +23,7 @@ function drawNewGraph(size) {
 }
 
 // Draw when starting
-drawNewGraph(10);
+drawNewGraph(100);
 // Trigger new graph drawing button
 let submitSize = document.getElementById("submitSize");
 console.log(submitSize);
