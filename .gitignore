@@ -2,4 +2,4 @@
 venv
 
 # ignore setting
-settings.json
+.vscode
