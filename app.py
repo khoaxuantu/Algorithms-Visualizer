@@ -13,5 +13,4 @@ def bubble_render():
 
 @app.route("/selection_sort")
 def selection_render():
-    return render_template("core/sort/selection_sort.html")
-    
+    return render_template("core/sort/selection_sort.html.j2")
