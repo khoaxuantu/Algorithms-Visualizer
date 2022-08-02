@@ -1,2 +1,5 @@
 # ignore python virtual environment
 venv
+
+# ignore setting
+settings.json
