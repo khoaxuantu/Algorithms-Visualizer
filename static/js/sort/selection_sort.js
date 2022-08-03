@@ -1,6 +1,6 @@
 import { getDelay, swap } from "../lib/cust_func_lib.js";
 import { BlockGraphFactory } from "../lib/graph.js";
-import { disableNode, enableNode } from "../lib/nodectrl.js";
+import { disableControl, enableControl } from "../lib/nodectrl.js";
 
 
 // Namespace URI for createElementNS
@@ -20,7 +20,7 @@ function drawNewGraph(size) {
     buildGraph.draw();
 }
 
-drawNewGraph(10)
+drawNewGraph(5)
 // Trigger new graph drawing button
 let submitSize = document.getElementById("submitSize");
 console.log(submitSize);
@@ -29,41 +29,50 @@ submitSize.addEventListener("click", function() {
     drawNewGraph(document.getElementById("inputSize").value);
 });
 
-// Disable control
-function disableControl() {
-    let sizeControl = new disableNode("sizeControl");
-    sizeControl.disableByGroup();
 
-    let speedControl = new disableNode("speedControl");
-    speedControl.disableByGroup();
-}
-
-// Enable control
-function enableControl() {
-    let sizeControl = new enableNode("sizeControl");
-    sizeControl.endableByGroup();
-
-    let speedControl = new enableNode("speedControl");
-    speedControl.endableByGroup();
-}
+/**
+ * For the visualization:
+ *  -   Tracking blocks color: #FFEE58
+ *  -   Minimum value block color: #81C784
+ */
 
 // Find the minimum value
 function findMin(array, start, end, delay) {
     let min = array[start];
+    min.style = "fill: #81C784";
+    // Remove the color in the previous block
+    if (start > 0)
+    {
+        array[start-1].removeAttribute("style");
+    }
+    
     for (let i = start+1; i <= end; i++)
     {
         setTimeout(() => {
-            array[i].style = "border: 20%"
+            // console.log("Inner " + i.toString() + ": " + ((i-start)*delay).toString());
+            // Track the running block
+            array[i-1].removeAttribute("style");
+            array[i].style = "fill: #FFEE58";
+            // Ensure the min block still keeps its color
+            min.style = "fill: #81C784";
             if (parseInt(array[i].id) < parseInt(min.id))
             {
                 min.removeAttribute("style");
                 min = array[i];
-                min.style = "fill: #81C784"                
+                min.style = "fill: #81C784";               
             }
-        }, i * delay);
+            // Swap the minimum value with the first unsorted point
+            if (i === end)
+            {
+                swap(array[start], min);  
+            }
+        }, (i-start) * delay);
     }
+}
 
-    return min;
+// Return the timeout factor of the outer loop
+function getSteps(n, max) {
+    return ((2*max - n) * n) / 2;
 }
 
 // Implement selection sort
@@ -71,17 +80,25 @@ function selectionSort(arr, delay) {
     let l = arr.length;
     for (let n = 0; n < l; n++)
     {
-        // Find the minimum value in a range
-        let min = findMin(arr, n, l-1, delay);
-
-        // Swap the minimum value with the first unsorted point
-        swap(arr[n], min);  
-
-        if (n === l - 1)
-        {
-            // Enable control in the final move
-            enableControl();
-        }
+        setTimeout(() => {
+            // console.log("Outer " + n.toString() + ": " + ((getSteps(n, l-1)+n) * delay).toString());
+            // Remove the track color in the last box whenever 
+            arr[l-1].removeAttribute("style");
+            // Find the minimum value in a range
+            setTimeout(() => {
+                findMin(arr, n, l-1, delay);
+            }, delay);
+            
+            if (n === l - 1)
+            {
+                // Remove the minimum value block's color when it reaches the last block
+                // Enable control in the final move
+                setTimeout(() => {
+                    enableControl();
+                    arr[l-1].removeAttribute("style");
+                }, 2*delay);
+            }
+        }, ((getSteps(n, l-1)+n) * delay)+((n+1)*delay));
     }
 }
 
