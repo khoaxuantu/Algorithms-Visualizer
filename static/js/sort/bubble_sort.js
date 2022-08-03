@@ -1,6 +1,6 @@
 import { swap, getDelay, traverseBlocks } from "../lib/cust_func_lib.js";
 import { BlockGraphFactory } from "../lib/graph.js";
-import { disableNode, enableNode } from "../lib/nodectrl.js";
+import { enableControl, disableControl } from "../lib/nodectrl.js";
 
 
 // Namespace URI for createElementNS
@@ -31,24 +31,6 @@ submitSize.addEventListener("click", function() {
     new_graph.clearGraph();
     drawNewGraph(document.getElementById("inputSize").value);
 });
-
-// Disable control
-function disableControl() {
-    let sizeControl = new disableNode("sizeControl");
-    sizeControl.disableByGroup();
-
-    let speedControl = new disableNode("speedControl");
-    speedControl.disableByGroup();
-}
-
-// Enable control
-function enableControl() {
-    let sizeControl = new enableNode("sizeControl");
-    sizeControl.endableByGroup();
-
-    let speedControl = new enableNode("speedControl");
-    speedControl.endableByGroup();
-}
 
 // Return the timeout factor of the outer loop
 function getSteps(n, max) {
