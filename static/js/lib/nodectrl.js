@@ -58,3 +58,21 @@ export class enableNode
         }
     }
 }
+
+// Disable control
+export function disableControl() {
+    let sizeControl = new disableNode("sizeControl");
+    sizeControl.disableByGroup();
+
+    let speedControl = new disableNode("speedControl");
+    speedControl.disableByGroup();
+}
+
+// Enable control
+export function enableControl() {
+    let sizeControl = new enableNode("sizeControl");
+    sizeControl.endableByGroup();
+
+    let speedControl = new enableNode("speedControl");
+    speedControl.endableByGroup();
+}
