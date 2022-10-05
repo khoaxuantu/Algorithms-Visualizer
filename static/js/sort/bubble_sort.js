@@ -38,39 +38,62 @@ function getSteps(n, max) {
 }
 
 // Implement bubble sort
-function bubbleSort(arr, delay) {
+async function bubbleSort(arr, delay) {
     let l = arr.length;
     for (let n = 0; n < l; n++)
     {
-        setTimeout(() => {
-            // console.log("Outer " + n.toString() + ": " + (getSteps(n, l-1) * delay).toString());
-            arr[0].style = "fill: #515A5A;";
-            if (n < l - 1)
+        arr[0].style = "fill: #515A5A;";
+        if (n < l - 1)
+        {
+            for (let i = 0; i < l - n - 1; i++)
             {
-                for (let i = 0; i < l - n - 1; i++)
-                {
+                // Keep track the running block
+                // console.log("Inner " + i.toString() + ": " + (i * delay).toString());
+                await new Promise((resolve) => 
                     setTimeout(() => {
-                        // Keep track the running block
-                        // console.log("Inner " + i.toString() + ": " + (i * delay).toString());
-                        if (parseInt(arr[i].id) > parseInt(arr[i + 1].id))
-                        {
-                            swap(arr[i], arr[i+1]);
-                        }
-                        else
-                        {
-                            arr[i].removeAttribute("style");
-                            arr[i+1].style = "fill: #515A5A;";
-                        }
-
-                    }, (i+1) * delay);
+                        resolve();
+                    }, delay)
+                );
+                if (parseInt(arr[i].id) > parseInt(arr[i + 1].id))
+                {
+                    swap(arr[i], arr[i+1]);
+                }
+                else
+                {
+                    arr[i].removeAttribute("style");
+                    arr[i+1].style = "fill: #515A5A;";
+                }
+                // Return default color at the end of the inner iteration
+                if (i === l - n - 2)
+                {
+                    await new Promise((resolve) => 
+                        setTimeout(() => {
+                            resolve();
+                        }, delay)
+                    );
+                    arr[i+1].removeAttribute("style");
                 }
             }
-            if (n === l - 1)
-            {
-                enableControl();
-                // traverseBlocks(l, arr);
-            }
-        }, (getSteps(n, l-1)+n) * delay);
+        }
+        else 
+        {
+            await new Promise((resolve) => 
+                setTimeout(() => {
+                    resolve();
+                }, delay)
+            );
+            arr[0].removeAttribute("style");
+        }
+        await new Promise((resolve) => 
+            setTimeout(() => {
+                resolve();
+            }, delay)
+        );
+        if (n === l - 1)
+        {
+            enableControl();
+            // traverseBlocks(l, arr);
+        }
     }
 }
 
