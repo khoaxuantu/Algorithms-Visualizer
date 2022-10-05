@@ -75,11 +75,6 @@ async function findMin(array, start, end, delay) {
     }
 }
 
-// Return the timeout factor of the outer loop
-function getSteps(n, max) {
-    return ((2*max - n) * n) / 2;
-}
-
 // Implement selection sort
 async function selectionSort(arr, delay) {
     let l = arr.length;
