@@ -81,7 +81,7 @@ async function selectionSort(arr, delay) {
     for (let n = 0; n < l; n++)
     {
         await new Promise((resolve) => 
-        setTimeout(() => {
+            setTimeout(() => {
                 resolve(findMin(arr, n, l-1, delay));
             }, delay)
         );
