@@ -81,27 +81,24 @@ function getSteps(n, max) {
 }
 
 // Implement selection sort
-function selectionSort(arr, delay) {
+async function selectionSort(arr, delay) {
     let l = arr.length;
     for (let n = 0; n < l; n++)
     {
-        // console.log("n: "+n);
-        // Remove the track color in the last box
-        // arr[l-1].removeAttribute("style");
+        await new Promise((resolve) => 
         setTimeout(() => {
-            // console.log("Outer " + n.toString() + ": " + ((getSteps(n, l-1)+n) * delay).toString()+"    "+Date.now());
-            // Find the minimum value in a range
-            findMin(arr, n, l-1, delay);
-            if (n === l - 1)
-            {
-                // Remove the minimum value block's color when it reaches the last block
-                // Enable control in the final move
-                setTimeout(() => {
-                    enableControl();
-                    arr[l-1].removeAttribute("style");
-                }, delay);
-            }
-        }, getSteps(n, l)*(delay+BIAS))
+                resolve(findMin(arr, n, l-1, delay));
+            }, delay)
+        );
+        if (n === l - 1)
+        {
+            // Remove the minimum value block's color when it reaches the last block
+            // Enable control in the final move
+            setTimeout(() => {
+                enableControl();
+                arr[l-1].removeAttribute("style");
+            }, delay);
+        }
     }
 }
 
