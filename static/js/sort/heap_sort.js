@@ -30,8 +30,71 @@ submitSize.addEventListener("click", function () {
 })
 
 /* Implement heap sort */
+/**
+ * For visualization
+ *  -   Tracking block color:
+ *  -   Largest per heapify block color:
+ *  -   Current index per heapify block color: 
+ */
+async function heapify(arr, heapSize, curIndex, delay) {
+    // Take the curIndex (root) as largestIndex
+    let largestIndex = curIndex;
+    // Take left and right node indices
+    let leftIndex = curIndex*2 + 1;
+    let rightIndex = curIndex*2 + 2;
+    // If leftTree is larger than the root
+        // Update largestIndex
+    if (leftIndex < heapSize && parseInt(arr[leftIndex].id) > parseInt(arr[largestIndex].id))
+    {
+        largestIndex = leftIndex;
+    }
+    // If rightTree is larger than the root
+        // Update largestIndex
+    if (rightIndex < heapSize && parseInt(arr[rightIndex].id) > parseInt(arr[largestIndex].id))
+    {
+        largestIndex = rightIndex
+    }
+    // Delay for {delay} ms
+    await new Promise((resolve) =>
+        setTimeout(() => {
+            resolve();
+        }, delay)
+    );
+    // If the largestIndex is not a root
+        // Swap with root
+        // Call recurively to the affected subtree
+    if (curIndex != largestIndex)
+    {
+        swap(arr[curIndex], arr[largestIndex]);
+        heapify(arr, heapSize, largestIndex, delay);
+    }
+}
+
 async function heapSort(arr, delay) {
-    
+    // Build heap
+    for (let i = arr.length/2 - 1; i >= 0; i--) {
+        // Each call to heapify need to be delay {delay}ms
+        await new Promise((resolve) =>
+            setTimeout(() => {
+                resolve(heapify(arr, arr.length, i, delay));
+            }, delay)
+        );
+    }
+    // Start from the last index 
+    // Call heapify func
+    // Until index = 0
+    let l = arr.length - 1;
+    while (l > 0)
+    {
+        // Each call to heapify need to be delay {delay}ms
+        await new Promise((resolve) =>
+        setTimeout(() => {
+                swap(arr[0], arr[l]);
+                resolve(heapify(arr, l, 0, delay));
+            }, delay)
+        );
+        l--;
+    }
 }
 
 /* Trigger the play button */
@@ -42,6 +105,6 @@ button.addEventListener("click", function () {
     let speed = getDelay();
 
     // Disable control form
-    disableControl();
+    // disableControl();
     heapSort(arr, speed);
 })
