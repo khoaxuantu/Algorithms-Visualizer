@@ -65,8 +65,12 @@ async function heapify(arr, heapSize, curIndex, delay) {
         // Call recurively to the affected subtree
     if (curIndex != largestIndex)
     {
-        swap(arr[curIndex], arr[largestIndex]);
-        heapify(arr, heapSize, largestIndex, delay);
+        await new Promise((resolve) =>
+        setTimeout(() => {
+                swap(arr[curIndex], arr[largestIndex]);
+                resolve(heapify(arr, heapSize, largestIndex, delay));
+            }, delay)
+        );
     }
 }
 
@@ -88,7 +92,7 @@ async function heapSort(arr, delay) {
     {
         // Each call to heapify need to be delay {delay}ms
         await new Promise((resolve) =>
-        setTimeout(() => {
+            setTimeout(() => {
                 swap(arr[0], arr[l]);
                 resolve(heapify(arr, l, 0, delay));
             }, delay)
