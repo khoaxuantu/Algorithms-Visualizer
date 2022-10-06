@@ -10,8 +10,6 @@ var svgns = "http://www.w3.org/2000/svg";
 const canvas = document.getElementById("graph");
 const svgWidth = parseInt(canvas.clientWidth);
 const svgHigh = parseInt(canvas.clientHeight) * 0.85;
-console.log(svgWidth)
-console.log(svgHigh)
 
 // Build graph
 let new_graph;
@@ -26,7 +24,6 @@ function drawNewGraph(size) {
 drawNewGraph(100);
 // Trigger new graph drawing button
 let submitSize = document.getElementById("submitSize");
-console.log(submitSize);
 submitSize.addEventListener("click", function() {
     new_graph.clearGraph();
     drawNewGraph(document.getElementById("inputSize").value);

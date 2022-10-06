@@ -14,3 +14,7 @@ def bubble_render():
 @app.route("/selection_sort")
 def selection_render():
     return render_template("core/sort/selection_sort.html.j2")
+
+@app.route("/heap_sort")
+def heap_render():
+    return render_template("core/sort/heap_sort.html.j2")
