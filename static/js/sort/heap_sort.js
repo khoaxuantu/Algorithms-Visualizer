@@ -122,6 +122,8 @@ async function heapSort(arr, delay) {
         arr[l].removeAttribute("style");
         l--;
     }
+    // Enable control after all steps are finished
+    enableControl();
 }
 
 /* Trigger the play button */
@@ -132,6 +134,6 @@ button.addEventListener("click", function() {
     let speed = getDelay();
 
     // Disable control form
-    // disableControl();
+    disableControl();
     heapSort(arr, speed);
 })
