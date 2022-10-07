@@ -20,7 +20,7 @@ function drawNewGraph(size) {
 }
 
 // Initial drawing
-drawNewGraph(30)
+drawNewGraph(10)
 
 /* Trigger new graph drawing button */
 const submitSize = document.getElementById("submitSize");
@@ -32,13 +32,14 @@ submitSize.addEventListener("click", function () {
 /* Implement heap sort */
 /**
  * For visualization
- *  -   Tracking block color:
- *  -   Largest per heapify block color:
- *  -   Current index per heapify block color: 
+ *  -   Tracking block color: #72A1EF
+ *  -   Largest per heapify block color: #81C784
+ *  -   Current index per heapify block color: #FFEE58
  */
 async function heapify(arr, heapSize, curIndex, delay) {
     // Take the curIndex (root) as largestIndex
     let largestIndex = curIndex;
+    arr[largestIndex].style = "fill: #FFEE58;";
     // Take left and right node indices
     let leftIndex = curIndex*2 + 1;
     let rightIndex = curIndex*2 + 2;
@@ -52,7 +53,7 @@ async function heapify(arr, heapSize, curIndex, delay) {
         // Update largestIndex
     if (rightIndex < heapSize && parseInt(arr[rightIndex].id) > parseInt(arr[largestIndex].id))
     {
-        largestIndex = rightIndex
+        largestIndex = rightIndex;
     }
     // Delay for {delay} ms
     await new Promise((resolve) =>
@@ -60,23 +61,44 @@ async function heapify(arr, heapSize, curIndex, delay) {
             resolve();
         }, delay)
     );
+    arr[largestIndex].style = "fill: #81C784;";
     // If the largestIndex is not a root
         // Swap with root
         // Call recurively to the affected subtree
     if (curIndex != largestIndex)
     {
         await new Promise((resolve) =>
-        setTimeout(() => {
-                swap(arr[curIndex], arr[largestIndex]);
+            setTimeout(() => {
+                resolve();
+            }, delay)
+        );
+        swap(arr[curIndex], arr[largestIndex]);
+        await new Promise((resolve) =>
+            setTimeout(() => {
+                resolve();
+            }, delay)
+        );
+        // Remove color 
+        arr[curIndex].removeAttribute("style");
+        arr[largestIndex].removeAttribute("style");
+        await new Promise((resolve) =>
+            setTimeout(() => {
                 resolve(heapify(arr, heapSize, largestIndex, delay));
             }, delay)
         );
     }
+    // Remove color
+    else 
+    {
+        arr[curIndex].removeAttribute("style");
+        arr[largestIndex].removeAttribute("style");
+    }
 }
 
 async function heapSort(arr, delay) {
-    // Build heap
+    // Modify the array to maxHeap-like structure
     for (let i = arr.length/2 - 1; i >= 0; i--) {
+        // arr[0].style = "fill: #72A1EF;";
         // Each call to heapify need to be delay {delay}ms
         await new Promise((resolve) =>
             setTimeout(() => {
@@ -85,25 +107,26 @@ async function heapSort(arr, delay) {
         );
     }
     // Start from the last index 
-    // Call heapify func
-    // Until index = 0
+    // Call heapify func until index = 0
     let l = arr.length - 1;
     while (l > 0)
     {
-        // Each call to heapify need to be delay {delay}ms
+        arr[0].style = "fill: #72A1EF;";
+        // Each call to heapify need to be delay {delay}ms, maintain the maxHeap-like structure
         await new Promise((resolve) =>
             setTimeout(() => {
                 swap(arr[0], arr[l]);
                 resolve(heapify(arr, l, 0, delay));
             }, delay)
         );
+        arr[l].removeAttribute("style");
         l--;
     }
 }
 
 /* Trigger the play button */
 const button = document.getElementById("play");
-button.addEventListener("click", function () {
+button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
     let speed = getDelay();
