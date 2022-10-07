@@ -18,3 +18,7 @@ def selection_render():
 @app.route("/heap_sort")
 def heap_render():
     return render_template("core/sort/heap_sort.html.j2")
+
+@app.route("/quick_sort")
+def quickSort_render():
+    return render_template("core/sort/quick_sort.html.j2")
