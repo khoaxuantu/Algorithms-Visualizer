@@ -32,9 +32,76 @@ submitSize.addEventListener("click", function () {
 /* Implement Quick Sort */
 /**
  * For visualization
+ *  -   pivot block: #72A1EF
+ *  -   jth block (partition): #81C784
+ *  -   ith block (partition): #FFEE58
  */
-async function quickSort(arr, delay) {
-    
+async function partition(delay, arr, low, high) {
+    // Traverse arr from low to high-1
+    // let pivot = arr[high];
+    // i: track the closet index whose value < pivot
+    arr[high].style = "fill: #72A1EF; ";
+    let i = low-1;
+    for (let j = low; j < high; j++)
+    {
+        arr[j].style = "fill: #81C784; ";
+        // if (i >= 0) arr[i].style = "fill: #FFEE58; ";
+        // If arr[j] <= arr[pi]
+            // Increment i 
+            // Swap arr[j], arr[i]
+        if (parseInt(arr[j].id) < parseInt(arr[high].id))
+        {
+            if (i >= 0) arr[i].removeAttribute("style");
+            i++;
+            if (i != j) arr[i].style = "fill: #FFEE58; ";
+            await new Promise((resolve) =>
+                setTimeout(() => {
+                    resolve(swap(arr[i], arr[j]));
+                    arr[i].style = "fill: #FFEE58; ";
+                    arr[j].style = "fill: #81C784; ";
+                }, delay)
+            );
+        }
+        else
+        {
+            await new Promise((resolve) =>
+                setTimeout(() => {
+                    resolve();
+                }, delay)
+            );
+        }
+        arr[j].removeAttribute("style");
+    }
+    if (i >= 0) arr[i].removeAttribute("style");
+    arr[i+1].style = "fill: #72A1EF; ";
+    // Swap the high (pivot) with i+1
+    await new Promise((resolve) =>
+        setTimeout(() => {
+            resolve(swap(arr[i+1], arr[high]));
+        }, delay)
+    );
+    arr[i+1].removeAttribute("style");
+    arr[high].removeAttribute("style");
+    return i+1;
+}
+
+async function quickSort(delay, arr, low, high) {
+    // Take pivot as high
+    // Until low >= high
+    if (low < high)
+    {
+        // Call to partition func
+        let pi = 
+        await new Promise((resolve) =>
+            setTimeout(() => {
+                resolve(partition(delay, arr, low, high));
+            }, delay)
+        );
+        // Call recursive func with high = pi-1
+        quickSort(delay, arr, low, pi - 1)
+        // Call recursive func with low = pi+1
+        quickSort(delay, arr, pi + 1, high)
+    }
 }
 
 /* Trigger the play button */
@@ -45,6 +112,6 @@ button.addEventListener("click", function() {
     let speed = getDelay();
 
     // Disable control form
-    disableControl();
-    heapSort(arr, speed);
+    // disableControl();
+    quickSort(speed, arr, 0, arr.length-1);
 })
