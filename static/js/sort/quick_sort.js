@@ -37,18 +37,11 @@ submitSize.addEventListener("click", function () {
  *  -   ith block (partition): #FFEE58
  */
 async function partition(delay, arr, low, high) {
-    // Traverse arr from low to high-1
-    // let pivot = arr[high];
-    // i: track the closet index whose value < pivot
     arr[high].style = "fill: #72A1EF; ";
     let i = low-1;
     for (let j = low; j < high; j++)
     {
         arr[j].style = "fill: #81C784; ";
-        // if (i >= 0) arr[i].style = "fill: #FFEE58; ";
-        // If arr[j] <= arr[pi]
-            // Increment i 
-            // Swap arr[j], arr[i]
         if (parseInt(arr[j].id) < parseInt(arr[high].id))
         {
             if (i >= 0) arr[i].removeAttribute("style");
@@ -98,9 +91,18 @@ async function quickSort(delay, arr, low, high) {
             }, delay)
         );
         // Call recursive func with high = pi-1
-        quickSort(delay, arr, low, pi - 1)
+        await new Promise((resolve) => {
+            resolve(quickSort(delay, arr, low, pi - 1));
+        })
+        
         // Call recursive func with low = pi+1
-        quickSort(delay, arr, pi + 1, high)
+        await new Promise((resolve) => {
+            resolve(quickSort(delay, arr, pi + 1, high));
+        })
+    }
+    if (low === 0 && high === arr.length-1)
+    {
+        enableControl();
     }
 }
 
@@ -112,6 +114,6 @@ button.addEventListener("click", function() {
     let speed = getDelay();
 
     // Disable control form
-    // disableControl();
+    disableControl();
     quickSort(speed, arr, 0, arr.length-1);
 })
