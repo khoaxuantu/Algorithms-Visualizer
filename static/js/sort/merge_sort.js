@@ -46,6 +46,6 @@ button.addEventListener("click", function() {
     let speed = getDelay();
 
     // Disable control form
-    disableControl();
-    quickSort(speed, arr, 0, arr.length-1);
+    // disableControl();
+    mergeSort(speed, arr);
 })
