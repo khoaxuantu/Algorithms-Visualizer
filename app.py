@@ -22,3 +22,7 @@ def heap_render():
 @app.route("/quick_sort")
 def quickSort_render():
     return render_template("core/sort/quick_sort.html.j2")
+
+@app.route("/merge_sort")
+def mergeSort_render():
+    return render_template("core/sort/merge_sort.html.j2")
