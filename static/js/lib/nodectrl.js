@@ -50,7 +50,7 @@ export class enableNode
 
     endableByGroup()
     {
-        console.log("Enable control");
+        // console.log("Enable control");
         let id = document.getElementById(this.name).children;
         for (let i = 0; i < id.length; i++)
         {

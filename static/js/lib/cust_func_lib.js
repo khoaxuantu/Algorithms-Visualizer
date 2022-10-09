@@ -15,7 +15,6 @@ export function getDelay() {
     {
         inputSpeed = slider.value / 100;
     }
-    console.log(inputSpeed);
     delay = (1 - inputSpeed) * SLOWEST_SPEED;
 
     return delay;

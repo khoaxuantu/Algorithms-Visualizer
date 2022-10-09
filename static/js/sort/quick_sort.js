@@ -20,7 +20,7 @@ function drawNewGraph(size) {
 }
 
 // Initial drawing
-drawNewGraph(10)
+drawNewGraph(50)
 
 /* Trigger new graph drawing button */
 const submitSize = document.getElementById("submitSize");
