@@ -24,7 +24,7 @@ function drawNewGraph(size) {
 }
 
 // Draw when starting
-drawNewGraph(100);
+drawNewGraph(50);
 // Trigger new graph drawing button
 let submitSize = document.getElementById("submitSize");
 submitSize.addEventListener("click", function() {
