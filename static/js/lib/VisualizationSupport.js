@@ -9,8 +9,6 @@ export function getDelay() {
     // Default delay value in 100%
     var delay = 10;
     var speedOpt = getSpeedOption();
-    console.log(speedOpt)
-    console.log(typeof(speedOpt))
     var inputSpeed = 0.99;
     let slider = document.getElementById("speedSlider");
     if (slider.value != 100)
@@ -28,7 +26,6 @@ function getSpeedOption() {
     for (let i = 0; i < speedOpt.length; i++) 
     {
         if (speedOpt[i].checked) {
-            console.log(speedOpt[i].id);
             return parseInt(speedOpt[i].value);
         } 
     }
