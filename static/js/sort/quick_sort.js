@@ -96,6 +96,7 @@ async function quickSort(delay, arr, low, high) {
     }
     if (low === 0 && high === arr.length-1)
     {
+        await VS.traverseBlocks(arr.length, arr);
         enableControl();
         abortController = null;
     }

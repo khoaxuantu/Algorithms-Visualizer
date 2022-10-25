@@ -123,6 +123,7 @@ async function heapSort(arr, delay) {
         arr[l].removeAttribute("style");
         l--;
     }
+    await VS.traverseBlocks(arr.length, arr);
     // Enable control after all steps are finished
     enableControl();
     abortController = null;

@@ -1,4 +1,4 @@
-import { getDelay, timeoutFunc } from "../lib/VisualizationSupport.js";
+import { getDelay, timeoutFunc, traverseBlocks } from "../lib/VisualizationSupport.js";
 import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { enableControl, disableControl } from "../lib/nodectrl.js";
 
@@ -63,6 +63,7 @@ async function mergeSort(arr, start, end) {
     }
     if (start === 0 && end === arr.length - 1)
     {
+        await traverseBlocks(arr.length, arr);
         enableControl();
         abortController = null;
     }

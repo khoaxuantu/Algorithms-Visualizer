@@ -84,7 +84,7 @@ async function bubbleSort(arr, delay) {
         if (n === l - 1)
         {
             enableControl();
-            // traverseBlocks(l, arr);
+            await VS.traverseBlocks(l, arr);
             abortController = null;
         }
     }
@@ -98,7 +98,6 @@ button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
     let speed = VS.getDelay();
-    console.log("Speed: " + speed);
 
     // Disable control form
     disableControl();

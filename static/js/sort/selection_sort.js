@@ -82,11 +82,10 @@ async function selectionSort(arr, delay) {
         {
             // Remove the minimum value block's color when it reaches the last block
             // Enable control in the final move
-            setTimeout(() => {
-                enableControl();
-                abortController = null;
-                arr[l-1].removeAttribute("style");
-            }, delay);
+            arr[l-1].removeAttribute("style");
+            await VS.traverseBlocks(l, arr);
+            enableControl();
+            abortController = null;
         }
     }
 }
@@ -98,8 +97,7 @@ button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
     let speed = VS.getDelay();
-    console.log("Speed: " + speed);
-
+    
     // Disable control form
     disableControl();
     abortController = new AbortController();

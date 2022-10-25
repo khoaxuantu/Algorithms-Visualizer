@@ -44,39 +44,38 @@ export function swap(nodeA, nodeB) {
 }
 
 // Traverse all the blocks after sorting completion
-export function traverseBlocks(length, array)
+export async function traverseBlocks(length, array)
 {
     var slidingBlocks;
     if (length % 2 == 0)
     {
-        slidingBlocks = length / 4;
+        slidingBlocks = parseInt(length / 4);
     }
     else
     {
-        slidingBlocks = length / 3;
+        slidingBlocks = parseInt(length / 3);
     }
 
     var start = 0;
     var end = 0;
-    while (start < length && end < length)
+    while (start < length || end < length)
     {
-        setTimeout(() => {
+        await new Promise((resolve) =>
+            setTimeout(() => {
+                resolve();
+            }, 50)
+        );
+        if (end < length)
+        {
             array[end].style = "fill: #58D68D;";
-            if (end < length)
-            {
-                end++;
-            }
-
-            if(end >= start + slidingBlocks)
-            {
-                array[start].removeAttribute("fill");
-                if (start < length)
-                {
-                    start++;
-                }
-            }
-
-        }, 100);
+            end++;
+        }
+        
+        if(end > array.length-1 || end >= start + slidingBlocks)
+        {
+            array[start].removeAttribute("style");
+            start++;
+        }
     }
 }
 
