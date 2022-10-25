@@ -84,6 +84,14 @@
                     <div class="p-2" id="speedControl">
                         <label for="speedSlider">Speed</label>
                         <input type="range" class="form-range" min="0" max="100" step="5" value="50" id="speedSlider" data-bs-toggle="popover" data-bs-trigger="hover focus">
+                        <div class="btn-group w-100" role="group" aria-label="Speed Option">
+                            <input type="radio" class="btn-check" name="spd-opt" id="x1" value="1" autocomplete="off" checked>
+                            <label class="btn btn-outline-light" for="x1">x1</label>
+                            <input type="radio" class="btn-check" name="spd-opt" id="x10" value="10" autocomplete="off">
+                            <label class="btn btn-outline-light" for="x10">x10</label>
+                            <input type="radio" class="btn-check" name="spd-opt" id="x100" value="100" autocomplete="off">
+                            <label class="btn btn-outline-light" for="x100">x100</label>
+                        </div>
                     </div>
                     <script>
                         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))

@@ -8,16 +8,30 @@ var SLOWEST_SPEED = 1000
 export function getDelay() {
     // Default delay value in 100%
     var delay = 10;
-
+    var speedOpt = getSpeedOption();
+    console.log(speedOpt)
+    console.log(typeof(speedOpt))
     var inputSpeed = 0.99;
     let slider = document.getElementById("speedSlider");
     if (slider.value != 100)
     {
         inputSpeed = slider.value / 100;
     }
-    delay = (1 - inputSpeed) * SLOWEST_SPEED;
+    delay = ((1 - inputSpeed) * SLOWEST_SPEED) / speedOpt;
 
     return delay;
+}
+
+// Input speed option
+function getSpeedOption() {
+    var speedOpt = document.getElementsByName('spd-opt');
+    for (let i = 0; i < speedOpt.length; i++) 
+    {
+        if (speedOpt[i].checked) {
+            console.log(speedOpt[i].id);
+            return parseInt(speedOpt[i].value);
+        } 
+    }
 }
 
 // Element swaping implementation
@@ -83,7 +97,7 @@ export function timeoutFunc(abortSignal, delay) {
         });
     });
 }
-
+// A timeout function to help demonstrate animation with a pass-in function
 export function timeoutWithPassInFunc(abortSignal, delay, passInFunc) {
     return new Promise((resolve) => {
         const timeout = setTimeout(() => {
