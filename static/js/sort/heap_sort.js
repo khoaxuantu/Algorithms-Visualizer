@@ -10,6 +10,9 @@ const canvas = document.getElementById("graph");
 const svgWidth = parseInt(canvas.clientWidth);
 const svgHigh = parseInt(canvas.clientHeight) * 0.85;
 
+// Declare an abort controller
+var abortController = null;
+
 /* Build graph */
 let new_graph;
 function drawNewGraph(size) {
@@ -56,36 +59,28 @@ async function heapify(arr, heapSize, curIndex, delay) {
         largestIndex = rightIndex;
     }
     // Delay for {delay} ms
-    await new Promise((resolve) =>
-        setTimeout(() => {
-            resolve();
-        }, delay)
-    );
+    await VS.timeoutFunc(abortController.signal, delay);
     arr[largestIndex].style = "fill: #81C784;";
     // If the largestIndex is not a root
         // Swap with root
         // Call recurively to the affected subtree
     if (curIndex != largestIndex)
     {
-        await new Promise((resolve) =>
-            setTimeout(() => {
-                resolve();
-            }, delay)
-        );
+        await VS.timeoutFunc(abortController.signal, delay);
         VS.swap(arr[curIndex], arr[largestIndex]);
-        await new Promise((resolve) =>
-            setTimeout(() => {
-                resolve();
-            }, delay)
-        );
+        
+        await VS.timeoutFunc(abortController.signal, delay);
         // Remove color 
         arr[curIndex].removeAttribute("style");
         arr[largestIndex].removeAttribute("style");
-        await new Promise((resolve) =>
-            setTimeout(() => {
+        await new Promise((resolve) => {
+            const timeout = setTimeout(() => {
                 resolve(heapify(arr, heapSize, largestIndex, delay));
-            }, delay)
-        );
+            }, delay);
+            abortController.signal.addEventListener('abort', () => {
+                clearTimeout(timeout);
+            });
+        });
     }
     // Remove color
     else 
@@ -100,11 +95,14 @@ async function heapSort(arr, delay) {
     for (let i = arr.length/2 - 1; i >= 0; i--) {
         // arr[0].style = "fill: #72A1EF;";
         // Each call to heapify need to be delay {delay}ms
-        await new Promise((resolve) =>
-            setTimeout(() => {
+        await new Promise((resolve) => {
+            const timeout = setTimeout(() => {
                 resolve(heapify(arr, arr.length, i, delay));
-            }, delay)
-        );
+            }, delay);
+            abortController.signal.addEventListener('abort', () => {
+                clearTimeout(timeout);
+            });
+        });
     }
     // Start from the last index 
     // Call heapify func until index = 0
@@ -113,27 +111,43 @@ async function heapSort(arr, delay) {
     {
         arr[0].style = "fill: #72A1EF;";
         // Each call to heapify need to be delay {delay}ms, maintain the maxHeap-like structure
-        await new Promise((resolve) =>
-            setTimeout(() => {
+        await new Promise((resolve) => {
+            const timeout = setTimeout(() => {
                 VS.swap(arr[0], arr[l]);
                 resolve(heapify(arr, l, 0, delay));
-            }, delay)
-        );
+            }, delay);
+            abortController.signal.addEventListener('abort', () => {
+                clearTimeout(timeout);
+            });
+        });
         arr[l].removeAttribute("style");
         l--;
     }
     // Enable control after all steps are finished
     enableControl();
+    abortController = null;
 }
 
-/* Trigger the play button */
+/* Trigger the play button and the reset button*/
 const button = document.getElementById("play");
+const resetBtn = document.getElementById('reset');
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
     let speed = VS.getDelay();
 
-    // Disable control form
+    // Disable control form and enable the reset button
     disableControl();
+    abortController = new AbortController();
     heapSort(arr, speed);
+})
+// When the reset button hears the click event, if abortController existed, call to its abort method
+resetBtn.addEventListener("click", () => {
+    if (abortController) {
+        abortController.abort();
+        abortController = null;
+    }
+    new_graph.clearGraph();
+    drawNewGraph(document.getElementById("inputSize").value);
+    enableControl();
 })

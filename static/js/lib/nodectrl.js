@@ -66,6 +66,12 @@ export function disableControl() {
 
     let speedControl = new disableNode("speedControl");
     speedControl.disableByGroup();
+
+    let playBtn = new disableNode("play");
+    playBtn.disableById();
+    
+    let resetBtn = new enableNode("reset");
+    resetBtn.endableById();
 }
 
 // Enable control
@@ -75,4 +81,10 @@ export function enableControl() {
 
     let speedControl = new enableNode("speedControl");
     speedControl.endableByGroup();
+
+    let playBtn = new enableNode("play");
+    playBtn.endableById();
+
+    let resetBtn = new disableNode("reset");
+    resetBtn.disableById();
 }

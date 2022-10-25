@@ -11,6 +11,9 @@ const canvas = document.getElementById("graph");
 const svgWidth = parseInt(canvas.clientWidth);
 const svgHigh = parseInt(canvas.clientHeight) * 0.85;
 
+// Declare an abort controller
+var abortController = null;
+
 // Build graph
 let new_graph;
 function drawNewGraph(size) {
@@ -46,11 +49,7 @@ async function bubbleSort(arr, delay) {
             {
                 // Keep track the running block
                 // console.log("Inner " + i.toString() + ": " + (i * delay).toString());
-                await new Promise((resolve) => 
-                    setTimeout(() => {
-                        resolve();
-                    }, delay)
-                );
+                await VS.timeoutFunc(abortController.signal, delay);
                 if (parseInt(arr[i].id) > parseInt(arr[i + 1].id))
                 {
                     VS.swap(arr[i], arr[i+1]);
@@ -74,11 +73,7 @@ async function bubbleSort(arr, delay) {
         }
         else 
         {
-            await new Promise((resolve) => 
-                setTimeout(() => {
-                    resolve();
-                }, delay)
-            );
+            await VS.timeoutFunc(abortController.signal, delay);
             arr[0].removeAttribute("style");
         }
         await new Promise((resolve) => 
@@ -90,6 +85,7 @@ async function bubbleSort(arr, delay) {
         {
             enableControl();
             // traverseBlocks(l, arr);
+            abortController = null;
         }
     }
 }
@@ -97,6 +93,7 @@ async function bubbleSort(arr, delay) {
 
 // Trigger the play button
 let button = document.getElementById('play');
+let stopBtn = document.getElementById('reset');
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
@@ -105,6 +102,17 @@ button.addEventListener("click", function() {
 
     // Disable control form
     disableControl();
-
+    abortController = new AbortController();
     bubbleSort(arr, speed);
 });
+
+// When the reset button hears the click event, if abortController existed, call to its abort method
+stopBtn.addEventListener("click", () => {
+    if (abortController) {
+        abortController.abort();
+        abortController = null;
+    }
+    new_graph.clearGraph();
+    drawNewGraph(document.getElementById("inputSize").value);
+    enableControl();
+})

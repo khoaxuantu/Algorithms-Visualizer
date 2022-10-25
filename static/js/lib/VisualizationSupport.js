@@ -68,3 +68,31 @@ export function traverseBlocks(length, array)
         }, 100);
     }
 }
+
+// A timeout function to help demonstrate animation
+// - abortSignal: Signal from the abortController, used for reseting the animation
+export function timeoutFunc(abortSignal, delay) {
+    return new Promise((resolve) => {
+        const timeout = setTimeout(() => {
+            resolve();
+        }, delay);
+        
+        // When receive abort signal, clear the timeout
+        abortSignal.addEventListener('abort', () => {
+            clearTimeout(timeout);
+        });
+    });
+}
+
+export function timeoutWithPassInFunc(abortSignal, delay, passInFunc) {
+    return new Promise((resolve) => {
+        const timeout = setTimeout(() => {
+            resolve(passInFunc);
+        }, delay);
+        
+        // When receive abort signal, clear the timeout
+        abortSignal.addEventListener('abort', () => {
+            clearTimeout(timeout);
+        });
+    });
+}

@@ -1,4 +1,4 @@
-import { getDelay } from "../lib/VisualizationSupport.js";
+import { getDelay, timeoutFunc } from "../lib/VisualizationSupport.js";
 import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { enableControl, disableControl } from "../lib/nodectrl.js";
 
@@ -9,6 +9,9 @@ var svgns = "http://www.w3.org/2000/svg";
 const canvas = document.getElementById("graph");
 const svgWidth = parseInt(canvas.clientWidth);
 const svgHigh = parseInt(canvas.clientHeight) * 0.85;
+
+/* Declare an abort controller */
+var abortController = null;
 
 /* Declare delay for animation */
 var DELAY;
@@ -42,11 +45,7 @@ submitSize.addEventListener("click", function () {
 async function mergeSort(arr, start, end) {
     if (start < end)
     {
-        await new Promise((resolve) =>
-            setTimeout(() => {
-                resolve();
-            }, DELAY)
-        );
+        await timeoutFunc(abortController.signal, DELAY);
         arr[start].style = "fill: #81C784; ";
         arr[end].style = "fill: #FFEE58; ";
         // Init start, end, mid var
@@ -57,11 +56,7 @@ async function mergeSort(arr, start, end) {
         await mergeSort(arr, mid + 1, end)
         // Call merge 
         await merge(arr, start, mid, end)
-        await new Promise((resolve) =>
-            setTimeout(() => {
-                resolve();
-            }, DELAY)
-        );
+        await timeoutFunc(abortController.signal, DELAY);
         arr[start].removeAttribute("style");
         arr[mid].removeAttribute("style");
         arr[end].removeAttribute("style");
@@ -69,6 +64,7 @@ async function mergeSort(arr, start, end) {
     if (start === 0 && end === arr.length - 1)
     {
         enableControl();
+        abortController = null;
     }
 }
 
@@ -121,12 +117,24 @@ function modifyBlock(block, updatedHeight, updatedId) {
     block.setAttribute("id", updatedId);
 }
 
-/* Trigger the play button */
+/* Trigger the play button and the reset button */
 const button = document.getElementById("play");
+const resetBtn = document.getElementById('reset');
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
     DELAY = getDelay();
     // Disable control form
     disableControl();
+    abortController = new AbortController();
     mergeSort(arr, 0, arr.length - 1);
+})
+// When the reset button hears the click event, if abortController existed, call to its abort method
+resetBtn.addEventListener("click", () => {
+    if (abortController) {
+        abortController.abort();
+        abortController = null;
+    }
+    new_graph.clearGraph();
+    drawNewGraph(document.getElementById("inputSize").value);
+    enableControl();
 })

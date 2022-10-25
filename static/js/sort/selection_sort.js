@@ -11,6 +11,9 @@ const canvas = document.getElementById("graph");
 const svgWidth = parseInt(canvas.clientWidth);
 const svgHigh = parseInt(canvas.clientHeight) * 0.85;
 
+/* Declare an abort controller */
+var abortController = null;
+
 // Build graph
 let new_graph;
 function drawNewGraph(size) {
@@ -47,13 +50,7 @@ async function findMin(array, start, end, delay) {
     
     for (let i = start+1; i <= end; i++)
     {
-        // console.log("Inner " + i.toString() + ": " + ((i-start)*delay).toString());
-        await new Promise((resolve) => 
-            setTimeout(() => {
-                resolve();
-                // console.log("pending" + i +"    "+Date.now())
-            }, delay)
-        );
+        await VS.timeoutFunc(abortController.signal, delay);
         // Track the running block
         array[i-1].removeAttribute("style");
         array[i].style = "fill: #FFEE58";
@@ -79,25 +76,24 @@ async function selectionSort(arr, delay) {
     let l = arr.length;
     for (let n = 0; n < l; n++)
     {
-        await new Promise((resolve) => 
-            setTimeout(() => {
-                resolve(findMin(arr, n, l-1, delay));
-            }, delay)
-        );
+        await VS.timeoutWithPassInFunc(abortController.signal, delay,
+                                       findMin(arr, n, l-1, delay));
         if (n === l - 1)
         {
             // Remove the minimum value block's color when it reaches the last block
             // Enable control in the final move
             setTimeout(() => {
                 enableControl();
+                abortController = null;
                 arr[l-1].removeAttribute("style");
             }, delay);
         }
     }
 }
 
-// Trigger the play button
+/* Trigger the play button and the reset button */
 let button = document.getElementById('play');
+const resetBtn = document.getElementById('reset');
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
@@ -106,6 +102,16 @@ button.addEventListener("click", function() {
 
     // Disable control form
     disableControl();
-
+    abortController = new AbortController();
     selectionSort(arr, speed);
 });
+// When the reset button hears the click event, if abortController existed, call to its abort method
+resetBtn.addEventListener("click", () => {
+    if (abortController) {
+        abortController.abort();
+        abortController = null;
+    }
+    new_graph.clearGraph();
+    drawNewGraph(document.getElementById("inputSize").value);
+    enableControl();
+})

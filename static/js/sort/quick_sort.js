@@ -10,6 +10,9 @@ const canvas = document.getElementById("graph");
 const svgWidth = parseInt(canvas.clientWidth);
 const svgHigh = parseInt(canvas.clientHeight) * 0.85;
 
+/* Declare an abort controller */
+var abortController = null;
+
 /* Build graph */
 let new_graph;
 function drawNewGraph(size) {
@@ -47,32 +50,29 @@ async function partition(delay, arr, low, high) {
             if (i >= 0) arr[i].removeAttribute("style");
             i++;
             if (i != j) arr[i].style = "fill: #FFEE58; ";
-            await new Promise((resolve) =>
-                setTimeout(() => {
-                    resolve(VS.swap(arr[i], arr[j]));
-                    arr[i].style = "fill: #FFEE58; ";
-                    arr[j].style = "fill: #81C784; ";
-                }, delay)
-            );
+            // await new Promise((resolve) =>
+            //     setTimeout(() => {
+            //         resolve(VS.swap(arr[i], arr[j]));
+            //         arr[i].style = "fill: #FFEE58; ";
+            //         arr[j].style = "fill: #81C784; ";
+            //     }, delay)
+            // );
+            await VS.timeoutWithPassInFunc(abortController.signal, delay,
+                                           VS.swap(arr[i], arr[j]));
+            arr[i].style = "fill: #FFEE58; ";
+            arr[j].style = "fill: #81C784; ";
         }
         else
         {
-            await new Promise((resolve) =>
-                setTimeout(() => {
-                    resolve();
-                }, delay)
-            );
+            await VS.timeoutFunc(abortController.signal, delay);
         }
         arr[j].removeAttribute("style");
     }
     if (i >= 0) arr[i].removeAttribute("style");
     arr[i+1].style = "fill: #72A1EF; ";
     // Swap the high (pivot) with i+1
-    await new Promise((resolve) =>
-        setTimeout(() => {
-            resolve(VS.swap(arr[i+1], arr[high]));
-        }, delay)
-    );
+    await VS.timeoutWithPassInFunc(abortController.signal, delay,
+                                   VS.swap(arr[i+1], arr[high]))
     arr[i+1].removeAttribute("style");
     arr[high].removeAttribute("style");
     return i+1;
@@ -85,29 +85,25 @@ async function quickSort(delay, arr, low, high) {
     {
         // Call to partition func
         let pi = 
-        await new Promise((resolve) =>
-            setTimeout(() => {
-                resolve(partition(delay, arr, low, high));
-            }, delay)
-        );
+        await VS.timeoutWithPassInFunc(abortController.signal, delay,
+                                       partition(delay, arr, low, high))
         // Call recursive func with high = pi-1
-        await new Promise((resolve) => {
-            resolve(quickSort(delay, arr, low, pi - 1));
-        })
-        
+        await VS.timeoutWithPassInFunc(abortController.signal, delay,
+                                       quickSort(delay, arr, low, pi - 1))
         // Call recursive func with low = pi+1
-        await new Promise((resolve) => {
-            resolve(quickSort(delay, arr, pi + 1, high));
-        })
+        await VS.timeoutWithPassInFunc(abortController.signal, delay, 
+                                       quickSort(delay, arr, pi + 1, high));
     }
     if (low === 0 && high === arr.length-1)
     {
         enableControl();
+        abortController = null;
     }
 }
 
-/* Trigger the play button */
+/* Trigger the play button and the reset button */
 const button = document.getElementById("play");
+const resetBtn = document.getElementById('reset');
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
@@ -115,5 +111,16 @@ button.addEventListener("click", function() {
 
     // Disable control form
     disableControl();
+    abortController = new AbortController();
     quickSort(speed, arr, 0, arr.length-1);
+})
+// When the reset button hears the click event, if abortController existed, call to its abort method
+resetBtn.addEventListener("click", () => {
+    if (abortController) {
+        abortController.abort();
+        abortController = null;
+    }
+    new_graph.clearGraph();
+    drawNewGraph(document.getElementById("inputSize").value);
+    enableControl();
 })
