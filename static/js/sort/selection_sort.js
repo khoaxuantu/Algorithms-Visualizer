@@ -1,5 +1,5 @@
 import { getDelay, swap } from "../lib/cust_func_lib.js";
-import { BlockGraphFactory } from "../lib/graph.js";
+import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { disableControl, enableControl } from "../lib/nodectrl.js";
 
 

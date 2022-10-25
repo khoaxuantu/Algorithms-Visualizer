@@ -1,15 +1,4 @@
-/**
- * Graph production
- */
-
-class graph
-{
-    constructor (width, height)
-    {
-        this.w = width;
-        this.h = height;
-    }
-}
+import { graph } from "../GraphFactory/graph.js";
 
 
 // Create a factory for block graph
@@ -40,24 +29,8 @@ export class BlockGraphFactory extends graph
 }
 
 
-// Create a factory for node graph
-export class NodeGraphFactory extends graph
-{
-    constructor(width, height, URInamespace)
-    {
-        super(width, height);
-        this.ns = URInamespace;
-    }
-
-    createGraph()
-    {
-        return new NodeGraph(this.w, this.h, this.ns);
-    }
-}
-
-
 // Implement the graph product
-export class BlockGraph
+class BlockGraph
 {
     constructor(numBlocks, width, height, URInamespace)
     {
@@ -122,10 +95,4 @@ export class BlockGraph
             field.appendChild(g);
         }
     }
-}
-
-
-class NodeGraph
-{
-
 }
