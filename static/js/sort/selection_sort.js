@@ -1,9 +1,8 @@
-import { getDelay, swap } from "../lib/cust_func_lib.js";
+import * as VS from "../lib/VisualizationSupport.js";
 import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { disableControl, enableControl } from "../lib/nodectrl.js";
 
 
-var BIAS = 5
 // Namespace URI for createElementNS
 var svgns = "http://www.w3.org/2000/svg";
 
@@ -70,7 +69,7 @@ async function findMin(array, start, end, delay) {
         if (i === end)
         {
             array[end].removeAttribute("style");
-            swap(array[start], min);
+            VS.swap(array[start], min);
         }
     }
 }
@@ -102,7 +101,7 @@ let button = document.getElementById('play');
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
-    let speed = getDelay();
+    let speed = VS.getDelay();
     console.log("Speed: " + speed);
 
     // Disable control form

@@ -1,4 +1,4 @@
-import { swap, getDelay } from "../lib/cust_func_lib.js";
+import * as VS from "../lib/VisualizationSupport.js";
 import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { enableControl, disableControl } from "../lib/nodectrl.js";
 
@@ -49,7 +49,7 @@ async function partition(delay, arr, low, high) {
             if (i != j) arr[i].style = "fill: #FFEE58; ";
             await new Promise((resolve) =>
                 setTimeout(() => {
-                    resolve(swap(arr[i], arr[j]));
+                    resolve(VS.swap(arr[i], arr[j]));
                     arr[i].style = "fill: #FFEE58; ";
                     arr[j].style = "fill: #81C784; ";
                 }, delay)
@@ -70,7 +70,7 @@ async function partition(delay, arr, low, high) {
     // Swap the high (pivot) with i+1
     await new Promise((resolve) =>
         setTimeout(() => {
-            resolve(swap(arr[i+1], arr[high]));
+            resolve(VS.swap(arr[i+1], arr[high]));
         }, delay)
     );
     arr[i+1].removeAttribute("style");
@@ -111,7 +111,7 @@ const button = document.getElementById("play");
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
-    let speed = getDelay();
+    let speed = VS.getDelay();
 
     // Disable control form
     disableControl();

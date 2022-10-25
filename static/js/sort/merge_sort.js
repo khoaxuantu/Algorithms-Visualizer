@@ -1,4 +1,4 @@
-import { getDelay } from "../lib/cust_func_lib.js";
+import { getDelay } from "../lib/VisualizationSupport.js";
 import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { enableControl, disableControl } from "../lib/nodectrl.js";
 

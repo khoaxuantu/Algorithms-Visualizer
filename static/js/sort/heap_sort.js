@@ -1,4 +1,4 @@
-import { swap, getDelay } from "../lib/cust_func_lib.js";
+import * as VS from "../lib/VisualizationSupport.js";
 import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { enableControl, disableControl } from "../lib/nodectrl.js";
 
@@ -72,7 +72,7 @@ async function heapify(arr, heapSize, curIndex, delay) {
                 resolve();
             }, delay)
         );
-        swap(arr[curIndex], arr[largestIndex]);
+        VS.swap(arr[curIndex], arr[largestIndex]);
         await new Promise((resolve) =>
             setTimeout(() => {
                 resolve();
@@ -115,7 +115,7 @@ async function heapSort(arr, delay) {
         // Each call to heapify need to be delay {delay}ms, maintain the maxHeap-like structure
         await new Promise((resolve) =>
             setTimeout(() => {
-                swap(arr[0], arr[l]);
+                VS.swap(arr[0], arr[l]);
                 resolve(heapify(arr, l, 0, delay));
             }, delay)
         );
@@ -131,7 +131,7 @@ const button = document.getElementById("play");
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
-    let speed = getDelay();
+    let speed = VS.getDelay();
 
     // Disable control form
     disableControl();

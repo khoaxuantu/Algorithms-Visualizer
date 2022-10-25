@@ -1,4 +1,4 @@
-import { swap, getDelay, traverseBlocks } from "../lib/cust_func_lib.js";
+import * as VS from "../lib/VisualizationSupport.js";
 import { BlockGraphFactory } from "../lib/GraphFactory/BlockGraph.js";
 import { enableControl, disableControl } from "../lib/nodectrl.js";
 
@@ -53,7 +53,7 @@ async function bubbleSort(arr, delay) {
                 );
                 if (parseInt(arr[i].id) > parseInt(arr[i + 1].id))
                 {
-                    swap(arr[i], arr[i+1]);
+                    VS.swap(arr[i], arr[i+1]);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ let button = document.getElementById('play');
 button.addEventListener("click", function() {
     let arr = document.getElementsByClassName("block");
 
-    let speed = getDelay();
+    let speed = VS.getDelay();
     console.log("Speed: " + speed);
 
     // Disable control form
