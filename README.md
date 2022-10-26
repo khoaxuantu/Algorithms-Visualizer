@@ -1,4 +1,4 @@
-# ALGORITHMS SIMULATION
+# ALGORITHMS VISUALIZER
 #### Video Demo:  <URL HERE>
 #### Description:
 TODO
