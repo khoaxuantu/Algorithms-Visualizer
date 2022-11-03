@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 COPY . /usr/src/app
 
-CMD [ "gunicorn","--bind","0.0.0.0:$PORT","wsgi" ]
+CMD [ "gunicorn","--workers=4","--bind","0.0.0.0:$PORT","app:app" ]
