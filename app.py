@@ -26,3 +26,7 @@ def quickSort_render():
 @app.route("/merge_sort")
 def mergeSort_render():
     return render_template("core/sort/merge_sort.html.j2")
+
+@app.route("/dev")
+def developing_render():
+    return render_template("core/developing.html")
