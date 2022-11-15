@@ -15,23 +15,27 @@ detailed deployment configurations are shown in the <code>main</code> branch
 #### Detail
 ##### File system<br>
 
-<code>app.py</code>
+<code>app.py</code><br>
+The <code>app.py</code> file is where the project starts running.
 
-<code>requirements.txt</code>
+The project features only focuses on  
+
+<br>
+<code>requirements.txt</code><br>
 
 <code>static/</code><br>
-    <code>css/</code>
+- <code>css/</code>
+<br>
+- <code>js/</code><br>
+    + <code>lib/</code>
     <br>
-    <code>js/</code><br>
-        <code>lib/</code>
-        <br>
-        <code>sort/</code>
-        <br>
+    + <code>sort/</code>
+    <br>
 
 <code>templates</code><br>
-    <code>core/</code>
-    <br>
-    <code>layouts/</code>
+- <code>core/</code>
+<br>
+- <code>layouts/</code>
 
 <br><br>
 
