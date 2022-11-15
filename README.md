@@ -13,9 +13,25 @@ detailed deployment configurations are shown in the <code>main</code> branch
 <br><br>
 
 #### Detail
-<code>File system</code><br>
+##### File system<br>
 
-  <code></code>
+<code>app.py</code>
+
+<code>requirements.txt</code>
+
+<code>static/</code><br>
+    <code>css/</code>
+    <br>
+    <code>js/</code><br>
+        <code>lib/</code>
+        <br>
+        <code>sort/</code>
+        <br>
+
+<code>templates</code><br>
+    <code>core/</code>
+    <br>
+    <code>layouts/</code>
 
 <br><br>
 
