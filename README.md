@@ -41,8 +41,7 @@ The folder includes a CSS file, to make some custom decorations other than Boots
 - <code>js/</code><br>
 Take a look at <code>js</code> folder, we realize all JavaScript files are stored in there.
 It also defines the core mechanics of the visualizations.
-    + <code>lib/</code>
-    <br>
+    + <code>lib/</code><br>
     The <code>lib</code> folder stores custom shared components that will be used in multiple facets of the app.
     It currently has three modules 
     <code>GraphFactory</code>, <code>nodectrl</code> and <code>VisualizationSupport</code>.<br>
@@ -50,9 +49,8 @@ It also defines the core mechanics of the visualizations.
     used for producing an initial graph that is waiting for the demonstration. You may want to learn more about this 
     graph factory's structure in ... below.<br>
     <code>nodectrl.js</code> implements all classes that are used to modify components in DOM.<br>
-    <code>VisualiztionSupport.js</code> implements all methods that supports the visualization.
-    + <code>sort/</code>
-    <br>
+    <code>VisualiztionSupport.js</code> implements all methods that supports the visualization.<br>
+    + <code>sort/</code><br>
     The <code>sort</code> folder contains all sorting visualizer modules corresponding to <code>sort</code> html files in 
     <code>templates/</code>.
 
