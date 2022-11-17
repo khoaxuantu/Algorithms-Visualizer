@@ -32,10 +32,6 @@ submitSize.addEventListener("click", function() {
     drawNewGraph(document.getElementById("inputSize").value);
 });
 
-// Return the timeout factor of the outer loop
-function getSteps(n, max) {
-    return ((2*max - n) * n) / 2;
-}
 
 // Implement bubble sort
 async function bubbleSort(arr, delay) {
