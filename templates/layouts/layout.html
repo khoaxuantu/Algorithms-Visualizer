@@ -93,15 +93,6 @@
                             <label class="btn btn-outline-light" for="x100">x100</label>
                         </div>
                     </div>
-                    <script>
-                        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-                        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                            return new bootstrap.Popover(popoverTriggerEl)
-                        })
-
-                        let inputRange = document.getElementById("speedSlider")
-                        inputRange.setAttribute('data-bs-content', inputRange.value.toString())
-                    </script>
                 </form>
 
             </div>
