@@ -71,12 +71,20 @@ class BlockGraph
         var consumedWidth = 0;
         // Specify the width of a block
         var boxWidth = this.boxWidth();
+        // Set array values and shuffling
+        let arr = new Array(this.numBlocks)
+        for (let i = 0; i < this.numBlocks; i++) {
+            arr[i] = i+1;
+        }
+        const shuffleArr = (arr) => arr.sort(() => Math.random() - 0.5);
+        shuffleArr(arr);
         // Generate blocks with appropriate value
         for (let i = 0; i < this.numBlocks; i++) {
-            // Get the value of the box randomly
-            var value = Math.floor(Math.random() * this.numBlocks) + 1;
+            // // Get the value of the box randomly (Archive)
+            // var value = Math.floor(Math.random() * this.numBlocks) + 1;
+
             // Specify the height of a block
-            var boxHeight = this.boxHeight(value);
+            var boxHeight = this.boxHeight(arr[i]);
             //console.log(boxHeight)
 
             // Create a block
@@ -84,7 +92,7 @@ class BlockGraph
             g.setAttribute('transform', "translate(" + consumedWidth.toString() + ")");
 
             const block = document.createElementNS(this.ns, 'rect');
-            block.setAttribute('id', value.toString());
+            block.setAttribute('id', arr[i].toString());
             block.setAttribute('class', 'block');
             block.setAttribute('width', boxWidth.toString());
             block.setAttribute('height', boxHeight.toString());
