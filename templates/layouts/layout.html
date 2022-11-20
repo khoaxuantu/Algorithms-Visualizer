@@ -58,12 +58,12 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- TODO canvas -->
-                <div id="simulation" class="container my-3 col border-end" style="height: 700px;">
+                <div id="simulation" class="container my-3 col-xl-10 border-end" style="height: 44em;">
                     {% block simulation %}{% endblock %}
                 </div>
 
                 <!-- TODO control box -->
-                <form class="control-box border-start col-2 py-3 gap-3">
+                <form class="control-box border-start col-xl-2 py-3">
                     <div class="p-2">
                         <button id="play" type="button" class="btn btn-success">Play</button>
                         <button id="reset" type="button" class="btn btn-danger" disabled>Reset</button>
@@ -72,7 +72,7 @@
                         <label for="inputSize">Input Size</label>
                         <div class="d-flex flex-row" id="sizeControl">
                             <input class="me-1 w-75" id="inputSize" type="number" name="size" min="1" max="1000" value="50" autocomplete="off" placeholder="size">
-                            <button type="button" class="btn btn-info" id="submitSize">Draw</button>
+                            <button type="button" class="btn btn-info w-25" id="submitSize">Draw</button>
                         </div>
                     </div>
                     <div class="p-2" id="speedControl">
