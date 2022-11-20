@@ -46,6 +46,10 @@ export function swap(nodeA, nodeB) {
 // Traverse all the blocks after sorting completion
 export async function traverseBlocks(length, array)
 {
+    let delay = 50;
+    if (length > 200) {
+        delay /= 20;
+    }
     var slidingBlocks;
     if (length % 2 == 0)
     {
@@ -63,7 +67,7 @@ export async function traverseBlocks(length, array)
         await new Promise((resolve) =>
             setTimeout(() => {
                 resolve();
-            }, 50)
+            }, delay)
         );
         if (end < length)
         {
