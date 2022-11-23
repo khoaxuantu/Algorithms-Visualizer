@@ -90,4 +90,8 @@ In the root directory of this project, start Flask's built-in server:<br>
 <pre> $ flask run </pre>
 
 ### Further development and future ideas
-- 
+- There are some more visualization concepts that I can be interested in. Currently I am developing several searching algorithm's 
+demonstrations. You can see four searching options on the navigation bar: <code>BFS</code>, <code>DFS</code>, 
+<code>Linear Search</code> and <code>Binary Search</code>. But it hasn't have anything in those routes until now because it is
+simply under development. The most challenge problem is that I have to figure out the efficient and easy-to-understand animations 
+and how to draw it out with only <code>HTML/CSS/JavaScript</code>. However, I believe it won't take so long then.
