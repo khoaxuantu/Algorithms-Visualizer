@@ -1,5 +1,5 @@
-# ALGORITHMS VISUALIZER
-### Video Demo:  <URL HERE>
+# SORTING ALGORITHMS VISUALIZER
+### Video Demo:  [Youtube](https://youtu.be/E36MedpgrE8)
 ### Description:
 - A web application that visualizes algorithms from code (initially provides sorting algorithms demonstration).
 - Tools: 
