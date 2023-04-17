@@ -22,15 +22,6 @@ function drawNewGraph(size) {
     buildGraph.draw();
 }
 
-// Initial drawing
-drawNewGraph(50)
-
-/* Trigger new graph drawing button */
-const submitSize = document.getElementById("submitSize");
-submitSize.addEventListener("click", function () {
-    new_graph.clearGraph();
-    drawNewGraph(document.getElementById("inputSize").value);
-})
 
 /* Implement heap sort */
 /**
@@ -38,7 +29,7 @@ submitSize.addEventListener("click", function () {
  *  -   Tracking block color: #72A1EF
  *  -   Largest per heapify block color: #81C784
  *  -   Current index per heapify block color: #FFEE58
- */
+*/
 async function heapify(arr, heapSize, curIndex, delay) {
     // Take the curIndex (root) as largestIndex
     let largestIndex = curIndex;
@@ -48,33 +39,33 @@ async function heapify(arr, heapSize, curIndex, delay) {
     let rightIndex = curIndex*2 + 2;
     // If leftTree is larger than the root
         // Update largestIndex
-    if (leftIndex < heapSize && parseInt(arr[leftIndex].id) > parseInt(arr[largestIndex].id))
-    {
-        largestIndex = leftIndex;
-    }
-    // If rightTree is larger than the root
+        if (leftIndex < heapSize && parseInt(arr[leftIndex].id) > parseInt(arr[largestIndex].id))
+        {
+            largestIndex = leftIndex;
+        }
+        // If rightTree is larger than the root
         // Update largestIndex
-    if (rightIndex < heapSize && parseInt(arr[rightIndex].id) > parseInt(arr[largestIndex].id))
-    {
-        largestIndex = rightIndex;
-    }
-    // Delay for {delay} ms
-    await VS.timeoutFunc(abortController.signal, delay);
-    arr[largestIndex].style = "fill: #81C784;";
-    // If the largestIndex is not a root
+        if (rightIndex < heapSize && parseInt(arr[rightIndex].id) > parseInt(arr[largestIndex].id))
+        {
+            largestIndex = rightIndex;
+        }
+        // Delay for {delay} ms
+        await VS.timeoutFunc(abortController.signal, delay);
+        arr[largestIndex].style = "fill: #81C784;";
+        // If the largestIndex is not a root
         // Swap with root
         // Call recurively to the affected subtree
-    if (curIndex != largestIndex)
-    {
-        await VS.timeoutFunc(abortController.signal, delay);
-        VS.swap(arr[curIndex], arr[largestIndex]);
-        
-        await VS.timeoutFunc(abortController.signal, delay);
-        // Remove color 
-        arr[curIndex].removeAttribute("style");
-        arr[largestIndex].removeAttribute("style");
-        await new Promise((resolve) => {
-            const timeout = setTimeout(() => {
+        if (curIndex != largestIndex)
+        {
+            await VS.timeoutFunc(abortController.signal, delay);
+            VS.swap(arr[curIndex], arr[largestIndex]);
+            
+            await VS.timeoutFunc(abortController.signal, delay);
+            // Remove color 
+            arr[curIndex].removeAttribute("style");
+            arr[largestIndex].removeAttribute("style");
+            await new Promise((resolve) => {
+                const timeout = setTimeout(() => {
                 resolve(heapify(arr, heapSize, largestIndex, delay));
             }, delay);
             abortController.signal.addEventListener('abort', () => {
@@ -123,32 +114,50 @@ async function heapSort(arr, delay) {
         arr[l].removeAttribute("style");
         l--;
     }
-    await VS.traverseBlocks(arr.length, arr);
+    await VS.traverseBlocks(abortController.signal, arr.length, arr);
     // Enable control after all steps are finished
     enableControl();
     abortController = null;
 }
 
-/* Trigger the play button and the reset button*/
-const button = document.getElementById("play");
-const resetBtn = document.getElementById('reset');
-button.addEventListener("click", function() {
-    let arr = document.getElementsByClassName("block");
-
-    let speed = VS.getDelay();
-
-    // Disable control form and enable the reset button
-    disableControl();
-    abortController = new AbortController();
-    heapSort(arr, speed);
-})
-// When the reset button hears the click event, if abortController existed, call to its abort method
-resetBtn.addEventListener("click", () => {
-    if (abortController) {
-        abortController.abort();
-        abortController = null;
-    }
-    new_graph.clearGraph();
+// Initial drawing
+document.addEventListener("DOMContentLoaded", () => {
     drawNewGraph(document.getElementById("inputSize").value);
-    enableControl();
+    
+    /* Trigger new graph drawing button */
+    const submitSize = document.getElementById("submitSize");
+    submitSize.addEventListener("click", function () {
+        new_graph.clearGraph();
+        drawNewGraph(document.getElementById("inputSize").value);
+    })
+    
+    document.getElementById('control').addEventListener("submit", (event) => {
+        new_graph.clearGraph();
+        drawNewGraph(document.getElementById("inputSize").value);
+        event.preventDefault();
+    })
+    
+    /* Trigger the play button and the reset button*/
+    const button = document.getElementById("play");
+    const resetBtn = document.getElementById('reset');
+    button.addEventListener("click", function() {
+        let arr = document.getElementsByClassName("block");
+        
+        let speed = VS.getDelay();
+        
+        // Disable control form and enable the reset button
+        disableControl();
+        abortController = new AbortController();
+        heapSort(arr, speed);
+    })
+    // When the reset button hears the click event, if abortController existed, call to its abort method
+    resetBtn.addEventListener("click", () => {
+        if (abortController) {
+            abortController.abort();
+            abortController = null;
+        }
+        new_graph.clearGraph();
+        drawNewGraph(document.getElementById("inputSize").value);
+        enableControl();
+    })
 })

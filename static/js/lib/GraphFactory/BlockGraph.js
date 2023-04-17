@@ -80,7 +80,7 @@ class BlockGraph
         shuffleArr(arr);
         // Generate blocks with appropriate value
         for (let i = 0; i < this.numBlocks; i++) {
-            // // Get the value of the box randomly
+            // // Get the value of the box randomly (Archive)
             // var value = Math.floor(Math.random() * this.numBlocks) + 1;
 
             // Specify the height of a block
