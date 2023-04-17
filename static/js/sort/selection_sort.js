@@ -23,15 +23,6 @@ function drawNewGraph(size) {
     buildGraph.draw();
 }
 
-drawNewGraph(50)
-// Trigger new graph drawing button
-let submitSize = document.getElementById("submitSize");
-submitSize.addEventListener("click", function() {
-    new_graph.clearGraph();
-    drawNewGraph(document.getElementById("inputSize").value);
-});
-
-
 /**
  * For the visualization:
  *  -   Tracking blocks color: #FFEE58
@@ -83,33 +74,50 @@ async function selectionSort(arr, delay) {
             // Remove the minimum value block's color when it reaches the last block
             // Enable control in the final move
             arr[l-1].removeAttribute("style");
-            await VS.traverseBlocks(l, arr);
+            await VS.traverseBlocks(abortController.signal, l, arr);
             enableControl();
             abortController = null;
         }
     }
 }
 
-/* Trigger the play button and the reset button */
-let button = document.getElementById('play');
-const resetBtn = document.getElementById('reset');
-button.addEventListener("click", function() {
-    let arr = document.getElementsByClassName("block");
-
-    let speed = VS.getDelay();
-    
-    // Disable control form
-    disableControl();
-    abortController = new AbortController();
-    selectionSort(arr, speed);
-});
-// When the reset button hears the click event, if abortController existed, call to its abort method
-resetBtn.addEventListener("click", () => {
-    if (abortController) {
-        abortController.abort();
-        abortController = null;
-    }
-    new_graph.clearGraph();
+document.addEventListener("DOMContentLoaded", () => {
     drawNewGraph(document.getElementById("inputSize").value);
-    enableControl();
+    
+    // Trigger new graph drawing button
+    let submitSize = document.getElementById("submitSize");
+    submitSize.addEventListener("click", function() {
+        new_graph.clearGraph();
+        drawNewGraph(document.getElementById("inputSize").value);
+    });
+    
+    document.getElementById('control').addEventListener("submit", (event) => {
+        new_graph.clearGraph();
+        drawNewGraph(document.getElementById("inputSize").value);
+        event.preventDefault();
+    })
+
+    /* Trigger the play button and the reset button */
+    let button = document.getElementById('play');
+    const resetBtn = document.getElementById('reset');
+    button.addEventListener("click", function() {
+        let arr = document.getElementsByClassName("block");
+    
+        let speed = VS.getDelay();
+        
+        // Disable control form
+        disableControl();
+        abortController = new AbortController();
+        selectionSort(arr, speed);
+    });
+    // When the reset button hears the click event, if abortController existed, call to its abort method
+    resetBtn.addEventListener("click", () => {
+        if (abortController) {
+            abortController.abort();
+            abortController = null;
+        }
+        new_graph.clearGraph();
+        drawNewGraph(document.getElementById("inputSize").value);
+        enableControl();
+    })
 })

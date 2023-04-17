@@ -44,7 +44,7 @@ export function swap(nodeA, nodeB) {
 }
 
 // Traverse all the blocks after sorting completion
-export async function traverseBlocks(length, array)
+export async function traverseBlocks(abortSignal, length, array)
 {
     let delay = 50;
     if (length > 200) {
@@ -65,11 +65,7 @@ export async function traverseBlocks(length, array)
     var end = 0;
     while (start < length || end < length)
     {
-        await new Promise((resolve) =>
-            setTimeout(() => {
-                resolve();
-            }, delay)
-        );
+        await timeoutFunc(abortSignal, delay);
         if (end < length)
         {
             array[end].style = "fill: #58D68D;";
