@@ -23,7 +23,9 @@ export default function RootLayout({
       </head>
       <body>
         <NavBar />
-        {children}
+        <div className='container-fluid'>
+          {children}
+        </div>
       </body>
     </html>
   )
