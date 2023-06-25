@@ -104,6 +104,7 @@ class SelectionSortGraph extends SortGraph {
      */
 
     override sort(): void {
+        console.log("Selection sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
         Utility.disableControl();
@@ -163,6 +164,7 @@ class BubbleSortGraph extends SortGraph {
     }
 
     override sort(): void {
+        console.log("Bubble sort");
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
 
@@ -223,6 +225,7 @@ class HeapSortGraph extends SortGraph {
      *  -   Current index per heapify block color: #FFEE58
     */
     override sort(): void {
+        console.log("Heap sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
 
@@ -334,6 +337,7 @@ class MergeSortGraph extends SortGraph {
      *  -   End block: #FFEE58
      */
     override sort(): void {
+        console.log("Merge sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         this.DELAY = VS.getDelay();
         // Disable control form
@@ -423,6 +427,7 @@ class QuickSortGraph extends SortGraph {
      *  -   ith block (partition): #FFEE58
      */
     override sort(): void {
+        console.log("Quick sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
         // Disable control form

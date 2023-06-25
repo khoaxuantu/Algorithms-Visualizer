@@ -14,13 +14,18 @@ export default function HeapSortPage() {
 
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;
+        let handlerSnapshot: () => void;
         if (size !== null && svgWidth > 0) {
             const factory = new HeapSortFactory(parseInt(size.value), svgWidth, svgHeight);
             const createdGraph = factory.createGraph();
-            SortControl.addHandler(factory, createdGraph, setGraph);
+            handlerSnapshot = SortControl.addHandler(factory, createdGraph, setGraph);
             setGraph(createdGraph);
         }
         getGraphSize(setSvgSize);
+
+        return () => {
+            SortControl.removeStartHandler(handlerSnapshot);
+        }
     }, [svgWidth, svgHeight]);
 
     console.log(graph)

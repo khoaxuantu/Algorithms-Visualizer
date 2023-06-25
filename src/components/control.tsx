@@ -77,14 +77,21 @@ export class SortControl {
     static addHandler(factory: BaseSortFactory, graph: SortGraph, setGraph: any) {
         this.addResetHandler(factory, setGraph);
         this.addDrawHandler(factory, setGraph);
-        this.addStartHandler(graph);
+        return this.addStartHandler(graph);
     }
 
     static addStartHandler(graph: SortGraph) {
         const playBtn = document.getElementById('play') as HTMLElement;
-        playBtn.addEventListener("click", () => {
+        const handler = () => {
             graph.sort();
-        })
+        }
+        playBtn.addEventListener("click", handler);
+        return handler;
+    }
+
+    static removeStartHandler(handler: () => void) {
+        const playBtn = document.getElementById('play') as HTMLElement;
+        playBtn?.removeEventListener("click", handler);
     }
 
     static addResetHandler(factory: BaseSortFactory, setGraph: any) {

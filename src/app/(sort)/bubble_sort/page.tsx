@@ -14,13 +14,19 @@ export default function BubbleSortPage() {
 
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;
+        let createdGraph: SortGraph;
+        let handler: () => void;
         if (size !== null && svgWidth > 0) {
             const factory = new BubbleSortFactory(parseInt(size.value), svgWidth, svgHeight);
-            const createdGraph = factory.createGraph();
-            SortControl.addHandler(factory, createdGraph, setGraph);
+            createdGraph = factory.createGraph();
+            handler = SortControl.addHandler(factory, createdGraph, setGraph);
             setGraph(createdGraph);
         }
         getGraphSize(setSvgSize);
+
+        return () => {
+            SortControl.removeStartHandler(handler);
+        }
     }, [svgWidth, svgHeight]);
 
     console.log(graph)

@@ -3,6 +3,7 @@
 import { SelectionSortFactory, SortGraph, getGraphSize } from "@/components/canvas/sort_graph";
 import { useEffect, useState } from "react";
 import { SortControl } from "@/components/control";
+import { usePathname, useRouter } from "next/navigation";
 
 
 export default function SelectionSortPage() {
@@ -10,17 +11,25 @@ export default function SelectionSortPage() {
     // An useState and an useEffect hook is needed to get the size
     // of the graph
     let [ [svgWidth, svgHeight], setSvgSize ] = useState([0, 0]);
-    let [graph, setGraph] = useState<SortGraph | undefined>();;
+    let [graph, setGraph] = useState<SortGraph | undefined>();
+    let path = usePathname();
 
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;
+        let createdGraph: SortGraph;
+        let handlerSnapshot: () => void;
         if (size !== null && svgWidth > 0) {
             const factory = new SelectionSortFactory(parseInt(size.value), svgWidth, svgHeight);
-            const createdGraph = factory.createGraph();
-            SortControl.addHandler(factory, createdGraph, setGraph);
+            createdGraph = factory.createGraph();
             setGraph(createdGraph);
+            handlerSnapshot = SortControl.addHandler(factory, createdGraph, setGraph);
+
         }
         getGraphSize(setSvgSize);
+
+        return () => {
+            SortControl.removeStartHandler(handlerSnapshot);
+        }
     }, [svgWidth, svgHeight]);
 
     console.log(graph)
