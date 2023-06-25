@@ -1,4 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
+import * as VS from '@/app/visualize_helpers';
+import { SortControl } from "../control";
+import { Utility } from "@/app/util";
 
 /**
  * Implements of factory method for graph
@@ -89,7 +92,7 @@ class SelectionSortGraph extends SortGraph {
                     let curWidth = consumedWidth;
                     consumedWidth += boxWidth;
                     return <Block key={index}
-                                id={(index+1).toString()}
+                                id={num.toString()}
                                 consumedWidth={curWidth.toString()}
                                 boxWidth={boxWidth}
                                 boxHeight={this.boxHeight(num)} />
@@ -98,8 +101,62 @@ class SelectionSortGraph extends SortGraph {
         );
     }
 
-    override sort(): void {
+    /**
+     * For the visualization:
+     *  -   Tracking blocks color: #FFEE58
+     *  -   Minimum value block color: #81C784
+     */
 
+    override sort(): void {
+        let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
+        let speed = VS.getDelay();
+        Utility.disableControl();
+        SortControl.abortController = new AbortController();
+        this.sortBegin(arr, speed);
+    }
+
+    private async sortBegin(arr: HTMLCollectionOf<HTMLElement>, delay: number) {
+        let l = arr.length;
+        for (let n = 0; n < l; n++) {
+            await VS.timeoutWithCallback((SortControl.abortController as AbortController).signal, delay,
+                                        this.findMin(arr, n, l-1, delay));
+            if (n === l - 1) {
+                // Remove the minimum value block's color when it reaches the last block
+                // Enable control in the final move
+                arr[l-1].removeAttribute("style");
+                await VS.traverseBlocks((SortControl.abortController as AbortController).signal, l, arr);
+                Utility.enableControl();
+                SortControl.abortController = null;
+            }
+        }
+    }
+
+    private async findMin(array: HTMLCollectionOf<HTMLElement>, start: number, end: number, delay: number) {
+        let min = array[start];
+        min.setAttribute("style", "fill: #81C784");
+        // Remove the color in the previous block
+        if (start > 0) {
+            array[start-1].removeAttribute("style");
+        }
+
+        for (let i = start+1; i <= end; i++) {
+            await VS.timeout((SortControl.abortController as AbortController).signal, delay);
+            // Track the running block
+            array[i-1].removeAttribute("style");
+            array[i].setAttribute("style", "fill: #FFEE58");
+            // Ensure the min block still keeps its color
+            min.setAttribute("style", "fill: #81C784");
+            if (parseInt(array[i].id) < parseInt(min.id)) {
+                min.removeAttribute("style");
+                min = array[i];
+                min.setAttribute("style", "fill: #81C784");
+            }
+            // Swap the minimum value with the first unsorted point
+            if (i === end) {
+                array[end].removeAttribute("style");
+                VS.swap(array[start], min);
+            }
+        }
     }
 }
 

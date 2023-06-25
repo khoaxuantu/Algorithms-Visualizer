@@ -17,7 +17,7 @@ export default function SelectionSortPage() {
         if (size !== null && svgWidth > 0) {
             const factory = new SelectionSortFactory(parseInt(size.value), svgWidth, svgHeight);
             const createdGraph = factory.createGraph();
-            SortControl.addHandler(factory, setGraph);
+            SortControl.addHandler(factory, createdGraph, setGraph);
             setGraph(createdGraph);
         }
         getGraphSize(setSvgSize);

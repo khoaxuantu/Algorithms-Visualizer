@@ -25,10 +25,10 @@ export class Utility {
 
 
 abstract class ActiveStateHandler {
-    protected node: HTMLInputElement | HTMLCollection;
+    protected node: HTMLElement;
 
     constructor(name: string) {
-        this.node = document.getElementById(name) as HTMLInputElement | HTMLCollection;
+        this.node = document.getElementById(name) as HTMLElement;
     }
 
     changeActiveState() {}
@@ -46,7 +46,7 @@ class DisableNode extends ActiveStateHandler {
     }
 
     disableByGroup() {
-        let nodeCollection = this.node as HTMLCollection;
+        let nodeCollection = this.node.children as HTMLCollection;
         let node;
         for (let i = 0; i < nodeCollection.length; i++) {
             node = nodeCollection[i] as HTMLInputElement;
@@ -55,8 +55,8 @@ class DisableNode extends ActiveStateHandler {
     }
 
     override changeActiveState(): void {
-        if (this.node instanceof HTMLCollection) this.disableByGroup();
-        else if (this.node instanceof HTMLInputElement) this.disableById();
+        if (this.node.children.length > 0) this.disableByGroup();
+        else this.disableById();
     }
 }
 
@@ -72,7 +72,7 @@ class EnableNode extends ActiveStateHandler {
     }
 
     endableByGroup() {
-        let nodeCollection = this.node as HTMLCollection;
+        let nodeCollection = this.node.children as HTMLCollection;
         let node;
         for (let i = 0; i < nodeCollection.length; i++) {
             node = nodeCollection[i] as HTMLInputElement;
@@ -81,7 +81,7 @@ class EnableNode extends ActiveStateHandler {
     }
 
     override changeActiveState(): void {
-        if (this.node instanceof HTMLCollection) this.endableByGroup();
-        else if (this.node instanceof HTMLInputElement) this.endableById();
+        if (this.node.children.length > 0) this.endableByGroup();
+        else this.endableById();
     }
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { Utility } from "@/app/util";
-import { BaseSortFactory } from "./canvas/sort_graph";
+import { BaseSortFactory, SortGraph } from "./canvas/sort_graph";
 
 type AlgoCategory = "sort" | "search"
 
@@ -39,7 +39,7 @@ function SortControlBox() {
         <>
             <div className="p-2">
                 <button id="play" type="button" className="btn btn-success me-1">Play</button>
-                <button id="reset" type="button" className="btn btn-danger">Reset</button>
+                <button id="reset" type="button" className="btn btn-danger" disabled>Reset</button>
             </div>
             <div className="p-2">
                 <label htmlFor="inputSize">Input Size</label>
@@ -74,18 +74,34 @@ export class SortControl {
      * @param factory - current graph factory
      * @param setGraph - a set state function using for setting graph
      */
-    static addHandler(factory: BaseSortFactory, setGraph: any) {
+    static addHandler(factory: BaseSortFactory, graph: SortGraph, setGraph: any) {
         this.addResetHandler(factory, setGraph);
         this.addDrawHandler(factory, setGraph);
+        this.addStartHandler(graph);
+    }
+
+    static addStartHandler(graph: SortGraph) {
+        const playBtn = document.getElementById('play') as HTMLElement;
+        playBtn.addEventListener("click", () => {
+            graph.sort();
+        })
     }
 
     static addResetHandler(factory: BaseSortFactory, setGraph: any) {
         const resetBtn = document.getElementById('reset') as HTMLElement;
         resetBtn.addEventListener("click", () => {
             this.checkAbortController();
+            this.resetGraphColor();
             setGraph(factory.createGraph());
             Utility.enableControl();
         })
+    }
+
+    private static resetGraphColor() {
+        let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
+        for (let i = 0; i < arr.length; i++) {
+            arr[i].removeAttribute("style");
+        }
     }
 
     static addDrawHandler(factory: BaseSortFactory, setGraph: any) {
@@ -98,12 +114,17 @@ export class SortControl {
 
         function handler() {
             const newBlocks = parseInt((document.getElementById("inputSize") as HTMLInputElement).value);
-            if (newBlocks > SortControl.maxBlocks) {
-                alert(`Value must be less than or equal to ${SortControl.maxBlocks}`);
-                return;
-            }
+            if (!validateBlocks(newBlocks)) return;
             factory.blocks = newBlocks;
             setGraph(factory.createGraph());
+        }
+
+        function validateBlocks(blocks: number) {
+            if (blocks > SortControl.maxBlocks) {
+                alert(`Value must be less than or equal to ${SortControl.maxBlocks}`);
+                return false;
+            }
+            return true
         }
     }
 
