@@ -26,10 +26,10 @@ export default function NavBar() {
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/" role="button" aria-haspopup="true" aria-expanded="false">Searching</a>
                             <div className="dropdown-menu">
-                              <Link className="dropdown-item" href="/">Linear Search</Link>
-                              <Link className="dropdown-item" href="/">Binary Search</Link>
-                              <Link className="dropdown-item" href="/">Breadth First Search</Link>
-                              <Link className="dropdown-item" href="/">Depth First Search</Link>
+                              <Link className="dropdown-item" href="/linear_search">Linear Search</Link>
+                              <Link className="dropdown-item" href="/binary_search">Binary Search</Link>
+                              <Link className="dropdown-item" href="/bfs">Breadth First Search</Link>
+                              <Link className="dropdown-item" href="/dfs">Depth First Search</Link>
                             </div>
                         </li>
                     </ul>
