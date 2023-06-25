@@ -1,5 +1,8 @@
 'use client'
 
+import { Utility } from "@/app/util";
+import { BaseSortFactory } from "./canvas/sort_graph";
+
 type AlgoCategory = "sort" | "search"
 
 interface controlProps {
@@ -36,7 +39,7 @@ function SortControlBox() {
         <>
             <div className="p-2">
                 <button id="play" type="button" className="btn btn-success me-1">Play</button>
-                <button id="reset" type="button" className="btn btn-danger" disabled>Reset</button>
+                <button id="reset" type="button" className="btn btn-danger">Reset</button>
             </div>
             <div className="p-2">
                 <label htmlFor="inputSize">Input Size</label>
@@ -60,5 +63,57 @@ function SortControlBox() {
         </>
     )
 }
+
+
+export class SortControl {
+    static abortController: null | AbortController = null;
+    static maxBlocks = 1000;
+
+    /**
+     * Add all needed control handler: reset, draw
+     * @param factory - current graph factory
+     * @param setGraph - a set state function using for setting graph
+     */
+    static addHandler(factory: BaseSortFactory, setGraph: any) {
+        this.addResetHandler(factory, setGraph);
+        this.addDrawHandler(factory, setGraph);
+    }
+
+    static addResetHandler(factory: BaseSortFactory, setGraph: any) {
+        const resetBtn = document.getElementById('reset') as HTMLElement;
+        resetBtn.addEventListener("click", () => {
+            this.checkAbortController();
+            setGraph(factory.createGraph());
+            Utility.enableControl();
+        })
+    }
+
+    static addDrawHandler(factory: BaseSortFactory, setGraph: any) {
+        const submitSize = document.getElementById("submitSize") as HTMLElement;
+        submitSize.addEventListener("click", handler);
+        (document.getElementById('control') as HTMLElement).addEventListener("submit", (e) => {
+            e.preventDefault();
+            handler();
+        });
+
+        function handler() {
+            const newBlocks = parseInt((document.getElementById("inputSize") as HTMLInputElement).value);
+            if (newBlocks > SortControl.maxBlocks) {
+                alert(`Value must be less than or equal to ${SortControl.maxBlocks}`);
+                return;
+            }
+            factory.blocks = newBlocks;
+            setGraph(factory.createGraph());
+        }
+    }
+
+    private static checkAbortController() {
+        if (this.abortController as AbortController) {
+            this.abortController?.abort();
+            this.abortController = null;
+        }
+    }
+}
+
 
 export default ControlBox;

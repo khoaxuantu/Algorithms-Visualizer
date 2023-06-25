@@ -1,11 +1,21 @@
 import { Dispatch, SetStateAction } from "react";
 
+/**
+ * Implements of factory method for graph
+ */
 
-abstract class SortGraph {
+
+/**
+ * A base class for sort-category graph
+ *
+ * @param numBlocks
+ * @param width The canvas's client width
+ * @param height The canvas's client height
+ */
+export abstract class SortGraph {
     protected numBlocks: number;
     protected width: number;
     protected height: number;
-    URINamespace: string = "http://www.w3.org/2000/svg";
 
     constructor(numBlocks: number, width: number, height: number) {
         this.numBlocks = numBlocks;
@@ -41,7 +51,7 @@ abstract class SortGraph {
     }
 
     // Set array values and shuffling method
-    protected createBlockList(): number[] {
+    createBlockList(): number[] {
         let arr = new Array(this.numBlocks)
         for (let i = 0; i < this.numBlocks; i++) {
             arr[i] = i+1;
@@ -49,40 +59,13 @@ abstract class SortGraph {
         arr = arr.sort(() => Math.random() - 0.5);
         return arr;
     }
-}
 
-
-abstract class BaseSortFactory {
-    protected numBlocks: number;
-    protected width: number;
-    protected height: number;
-
-    constructor(numBlocks: number, width: number, height: number) {
+    set blocks(numBlocks: number) {
         this.numBlocks = numBlocks;
-        this.width = width;
-        this.height = height;
     }
 
-    createGraph(): SortGraph | null {
-        return null;
-    }
-
-    clear(): void {
-        let graph = document.getElementById("graph") as HTMLElement;
-        while(graph.firstChild) {
-            graph.removeChild(graph.lastChild as ChildNode);
-        }
-    }
-}
-
-
-export class SelectionSortFactory extends BaseSortFactory {
-    constructor(numBlocks: number, width: number, height: number) {
-        super(numBlocks, width, height);
-    }
-
-    override createGraph(): SortGraph {
-        return new SelectionSortGraph(this.numBlocks, this.width, this.height);
+    get blocks() {
+        return this.numBlocks;
     }
 }
 
@@ -138,8 +121,64 @@ function Block(props : BlockProps) {
     );
 }
 
-// This function helps to collect the overall size of the graph
-// ([width, height])
+
+/**
+ * A base class for sort-category base factory
+ *
+ * @method createGraph() return SortGraph product
+*/
+export abstract class BaseSortFactory {
+    protected numBlocks: number;
+    protected width: number;
+    protected height: number;
+
+    constructor(numBlocks: number, width: number, height: number) {
+        this.numBlocks = numBlocks;
+        this.width = width;
+        this.height = height;
+    }
+
+    createGraph(): SortGraph | null {
+        return null;
+    }
+
+    clear(): void {
+        let graph = document.getElementById("graph") as HTMLElement;
+        while(graph.firstChild) {
+            graph.removeChild(graph.lastChild as ChildNode);
+        }
+    }
+
+    set blocks(numBlocks: number) {
+        this.numBlocks = numBlocks;
+    }
+
+    get blocks() {
+        return this.numBlocks;
+    }
+}
+
+
+export class SelectionSortFactory extends BaseSortFactory {
+    constructor(numBlocks: number, width: number, height: number) {
+        super(numBlocks, width, height);
+    }
+
+    override createGraph(): SortGraph {
+        return new SelectionSortGraph(this.numBlocks, this.width, this.height);
+    }
+}
+
+
+/**
+ * Other helper functions
+ */
+
+/**
+ * This function helps to collect the overall size of the graph
+ * ([width, height])
+ * @param setSvgSize set state function using for set the canvas size
+ */
 export function getGraphSize(setSvgSize: Dispatch<SetStateAction<[number, number]>>) {
     let canvas = document.getElementById("graph") as HTMLElement;
     setSvgSize([canvas.clientWidth, canvas.clientHeight * 0.85])

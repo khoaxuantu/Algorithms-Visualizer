@@ -1,4 +1,6 @@
 import ControlBox from "@/components/control";
+import { SortGraph } from "@/components/canvas/sort_graph";
+import { Utility } from "../util";
 
 export default function SortLayout({
     children
