@@ -1,6 +1,7 @@
 import '../css/styles.css';
 import NavBar from '@/components/navbar';
 import Script from 'next/script';
+import Copyright from './copyright';
 
 export const metadata = {
   title: 'Main',
@@ -26,6 +27,7 @@ export default function RootLayout({
         <div className='container-fluid'>
           {children}
         </div>
+        <Copyright />
       </body>
     </html>
   )

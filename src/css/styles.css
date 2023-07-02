@@ -30,3 +30,14 @@ nav {
     list-style: none;
     display: inline;
 }
+
+/* Copyright */
+.copyright {
+    font-size: 12px;
+}
+
+@media screen and (min-width: 768px) {
+    .copyright {
+        font-size: 1rem;
+    }
+}
