@@ -4,3 +4,5 @@ __pycache__
 
 # ignore setting
 .vscode
+
+node_modules/
