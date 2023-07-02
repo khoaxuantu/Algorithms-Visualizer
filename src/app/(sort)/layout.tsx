@@ -1,12 +1,19 @@
 import ControlBox from "@/components/control";
-import { SortGraph } from "@/components/canvas/sort_graph";
-import { Utility } from "../util";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: {
+        template: '%s Sort',
+        default: 'Sort'
+    }
+}
 
 export default function SortLayout({
     children
 }: {
     children: React.ReactNode
 }) {
+
     return (
         <div className="row">
             {/* TODO canvas */}
