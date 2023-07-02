@@ -19,9 +19,7 @@ export default function SortLayout({
             {/* TODO canvas */}
             <div id="simulation" className="container my-3 col-xl-10 border-end"
                 style={{ height: "44rem" }}>
-                <svg className="" id="graph" width="100%" height="85%" style={{ transform: "rotateX(180deg)" }}>
-                    {children}
-                </svg>
+                {children}
             </div>
             <ControlBox category="sort" />
         </div>
