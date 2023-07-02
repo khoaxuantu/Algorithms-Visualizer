@@ -1,6 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Algorithm Visualizer
 
-## Getting Started
+This is a web application visualizing alogrithms from code. , it provides some sorting algorithms, including:
+- Selection sort
+- Bubble sort
+- Heap sort
+- Quick sort
+- Merge sort
+
+## Tools
+In the beta version, it was built by [Flask](https://flask.palletsprojects.com/), plain
+[JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) and
+hosted on [Heroku](https://www.heroku.com/).
+
+Now it is built by:
+- [Next.js](https://nextjs.org)
+- [Bootstrap](https://getbootstrap.com)
+- Hosted on [Vercel](https://vercel.com)
+
+## Functionalities
+- Navigate between different pages.
+- The animated visualization view.
+- `Play` and `Reset` the animation.
+- Draw the graph with an optional size.
+- Change the speed of the animation.
+- Select the speed between 3 categories: `x1` to default, `x10` to 10 times faster, `x100` to 100 times faster.
+
+## Run (locally)
 
 First, run the development server:
 
@@ -12,23 +37,4 @@ yarn dev
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
