@@ -2,7 +2,14 @@ import { Metadata } from "next";
 import HeapSortDetail from "./detail";
 
 export const metadata: Metadata = {
-    title: 'Heap'
+    title: 'Heap',
+    description: 'A visualization of heap sort.',
+    openGraph: {
+        title: 'Heap Sort',
+        description: 'A visualization of heap sort',
+        type: 'website',
+        url: 'https://algovisual.xuankhoatu.com/heap_sort'
+    }
 }
 
 export default function HeapSortPage() {

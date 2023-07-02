@@ -2,7 +2,14 @@ import SelectionSortDetail from "./detail";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Selection"
+    title: "Selection",
+    description: 'A visualization of selection sort.',
+    openGraph: {
+        title: 'Selection Sort',
+        description: 'A visualization of selection sort.',
+        type: 'website',
+        url: 'https://algovisual.xuankhoatu.com/selection_sort'
+    }
 }
 
 export default function SelectionSortPage() {

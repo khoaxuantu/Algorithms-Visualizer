@@ -2,7 +2,14 @@ import { Metadata } from "next";
 import MergeSortDetail from "./detail";
 
 export const metadata: Metadata = {
-    title: 'Merge'
+    title: 'Merge',
+    description: 'A visualization of merge sort',
+    openGraph: {
+        title: 'Merge Sort',
+        description: 'A visualization of merge sort.',
+        type: 'website',
+        url: 'https://algovisual.xuankhoatu.com/merge_sort'
+    }
 }
 
 export default function MergeSortPage() {

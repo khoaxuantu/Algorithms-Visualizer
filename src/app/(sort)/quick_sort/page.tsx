@@ -2,7 +2,14 @@ import { Metadata } from "next";
 import QuickSortDetail from "./detail";
 
 export const metadata: Metadata = {
-    title: 'Quick'
+    title: 'Quick',
+    description: 'A visualization of quick sort.',
+    openGraph: {
+        title: 'Quick Sort',
+        description: 'A visualization of quick sort.',
+        type: 'website',
+        url: 'https://algovisual.xuankhoatu.com/quick_sort'
+    }
 }
 
 export default function QuickSortPage() {

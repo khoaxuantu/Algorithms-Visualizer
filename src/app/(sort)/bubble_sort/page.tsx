@@ -2,7 +2,14 @@ import { Metadata } from "next";
 import BubbleSortDetail from "./detail";
 
 export const metadata: Metadata = {
-    title: 'Bubble'
+    title: 'Bubble',
+    description: 'A visualization of bubble sort.',
+    openGraph: {
+        title: 'Bubble Sort',
+        description: 'A visualization of bubble sort.',
+        type: 'website',
+        url: 'https://algovisual.xuankhoatu.com/bubble_sort'
+    }
 }
 
 export default function BubbleSortPage() {
