@@ -10,7 +10,7 @@ export default function HeapSortDetail() {
     // An useState and an useEffect hook is needed to get the size
     // of the graph
     let [ [svgWidth, svgHeight], setSvgSize ] = useState([0, 0]);
-    let [graph, setGraph] = useState<SortGraph | undefined>();;
+    let [graph, setGraph] = useState<SortGraph | undefined>();
 
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;

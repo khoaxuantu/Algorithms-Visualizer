@@ -18,6 +18,7 @@ export default function NavBar() {
                             <div className="dropdown-menu">
                               <Link className="dropdown-item" href="/selection_sort">Selection Sort</Link>
                               <Link className="dropdown-item" href="/bubble_sort">Bubble Sort</Link>
+                              <Link className="dropdown-item" href="/insertion_sort">Insertion Sort</Link>
                               <Link className="dropdown-item" href="/heap_sort">Heap Sort</Link>
                               <Link className="dropdown-item" href="/quick_sort">Quick Sort</Link>
                               <Link className="dropdown-item" href="/merge_sort">Merge Sort</Link>
