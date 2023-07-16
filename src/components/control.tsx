@@ -145,6 +145,9 @@ export class SortControl {
             if (blocks > SortControl.maxBlocks) {
                 alert(`Value must be less than or equal to ${SortControl.maxBlocks}`);
                 return false;
+            } else if (blocks < 1) {
+                alert(`Value must be larger than 0`);
+                return false;
             }
             return true
         }
