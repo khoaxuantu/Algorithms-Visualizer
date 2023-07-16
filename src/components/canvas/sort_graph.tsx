@@ -500,6 +500,7 @@ class QuickSortGraph extends SortGraph {
                                     VS.swap(arr[i+1], arr[high]))
         this.removeBlockColor(arr[i+1]);
         this.removeBlockColor(arr[high]);
+
         return i+1;
     }
 }
