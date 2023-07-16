@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { QuickSortFactory, SortGraph, getGraphSize } from "@/components/canvas/sort_graph";
-import { SortControl } from "@/components/control";
+import { HandlerGroup, SortControl } from "@/components/control";
 
 
 export default function QuickSortDetail() {
@@ -14,7 +14,7 @@ export default function QuickSortDetail() {
 
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;
-        let handlerSnapshot: () => void;
+        let handlerSnapshot: HandlerGroup;
         if (size !== null && svgWidth > 0) {
             const factory = new QuickSortFactory(parseInt(size.value), svgWidth, svgHeight);
             const createdGraph = factory.createGraph();
@@ -24,7 +24,7 @@ export default function QuickSortDetail() {
         getGraphSize(setSvgSize);
 
         return () => {
-            SortControl.removeStartHandler(handlerSnapshot);
+            SortControl.removeHandler(handlerSnapshot);
         }
     }, [svgWidth, svgHeight]);
 

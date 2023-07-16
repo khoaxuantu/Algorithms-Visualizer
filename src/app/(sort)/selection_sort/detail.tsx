@@ -2,7 +2,7 @@
 
 import { SelectionSortFactory, SortGraph, getGraphSize } from "@/components/canvas/sort_graph";
 import { useEffect, useState } from "react";
-import { SortControl } from "@/components/control";
+import { HandlerGroup, SortControl } from "@/components/control";
 
 export default function SelectionSortDetail() {
     // Because the document is undefined due to server side rendering,
@@ -14,18 +14,17 @@ export default function SelectionSortDetail() {
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;
         let createdGraph: SortGraph;
-        let handlerSnapshot: () => void;
+        let handlerSnapshot: HandlerGroup;
         if (size !== null && svgWidth > 0) {
             const factory = new SelectionSortFactory(parseInt(size.value), svgWidth, svgHeight);
             createdGraph = factory.createGraph();
             setGraph(createdGraph);
             handlerSnapshot = SortControl.addHandler(factory, createdGraph, setGraph);
-
         }
         getGraphSize(setSvgSize);
 
         return () => {
-            SortControl.removeStartHandler(handlerSnapshot);
+            SortControl.removeHandler(handlerSnapshot);
         }
     }, [svgWidth, svgHeight]);
 
