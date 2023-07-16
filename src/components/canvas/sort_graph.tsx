@@ -26,7 +26,17 @@ export abstract class SortGraph {
         this.height = height;
     }
 
-    sort(): void {}
+    set blocks(numBlocks: number) {
+        this.numBlocks = numBlocks;
+    }
+
+    get blocks() {
+        return this.numBlocks;
+    }
+
+    sort(): void {
+        throw Error("🚀 ~ file: sort_graph.tsx:38 ~ SortGraph ~ sort: Please override the sort method");
+    }
 
     draw(): JSX.Element | null | undefined {
         // Store the horizontal distance which has been taken place
@@ -49,6 +59,14 @@ export abstract class SortGraph {
                 })}
             </>
         );
+    }
+
+    protected setBlockColor(block: HTMLElement, color: string) {
+        block.setAttribute('style', `fill: ${color} `);
+    }
+
+    protected removeBlockColor(block: HTMLElement) {
+        block.removeAttribute('style');
     }
 
     // Specify the width of a box
@@ -81,18 +99,13 @@ export abstract class SortGraph {
         arr = arr.sort(() => Math.random() - 0.5);
         return arr;
     }
-
-    set blocks(numBlocks: number) {
-        this.numBlocks = numBlocks;
-    }
-
-    get blocks() {
-        return this.numBlocks;
-    }
 }
 
 
 class SelectionSortGraph extends SortGraph {
+    public minValColor = '#81C784';
+    public trackingColor = '#FFEE58';
+
     constructor(nb: number, w: number, h: number) {
         super(nb, w, h);
     }
@@ -104,7 +117,7 @@ class SelectionSortGraph extends SortGraph {
      */
 
     override sort(): void {
-        console.log("Selection sort")
+        console.log("Visualize selection sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
         Utility.disableControl();
@@ -120,7 +133,7 @@ class SelectionSortGraph extends SortGraph {
             if (n === l - 1) {
                 // Remove the minimum value block's color when it reaches the last block
                 // Enable control in the final move
-                arr[l-1].removeAttribute("style");
+                this.removeBlockColor(arr[l-1]);
                 await VS.traverseBlocks((SortControl.abortController as AbortController).signal, l, arr);
                 Utility.enableControl();
                 SortControl.abortController = null;
@@ -130,27 +143,27 @@ class SelectionSortGraph extends SortGraph {
 
     private async findMin(array: HTMLCollectionOf<HTMLElement>, start: number, end: number, delay: number) {
         let min = array[start];
-        min.setAttribute("style", "fill: #81C784");
+        this.setBlockColor(min, this.minValColor);
         // Remove the color in the previous block
         if (start > 0) {
-            array[start-1].removeAttribute("style");
+            this.removeBlockColor(array[start-1]);
         }
 
         for (let i = start+1; i <= end; i++) {
             await VS.timeout((SortControl.abortController as AbortController).signal, delay);
             // Track the running block
-            array[i-1].removeAttribute("style");
-            array[i].setAttribute("style", "fill: #FFEE58");
+            this.removeBlockColor(array[i-1]);
+            this.setBlockColor(array[i], this.trackingColor);
             // Ensure the min block still keeps its color
-            min.setAttribute("style", "fill: #81C784");
+            this.setBlockColor(min, this.minValColor);
             if (parseInt(array[i].id) < parseInt(min.id)) {
-                min.removeAttribute("style");
+                this.removeBlockColor(min);
                 min = array[i];
-                min.setAttribute("style", "fill: #81C784");
+                this.setBlockColor(min, this.minValColor);
             }
             // Swap the minimum value with the first unsorted point
             if (i === end) {
-                array[end].removeAttribute("style");
+                this.removeBlockColor(array[end]);
                 VS.swap(array[start], min);
             }
         }
@@ -159,12 +172,14 @@ class SelectionSortGraph extends SortGraph {
 
 
 class BubbleSortGraph extends SortGraph {
+    public trackingColor: string = '#515A5A';
+
     constructor(nb: number, w: number, h: number) {
         super(nb, w, h);
     }
 
     override sort(): void {
-        console.log("Bubble sort");
+        console.log("Visualize bubble sort");
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
 
@@ -176,7 +191,7 @@ class BubbleSortGraph extends SortGraph {
     private async sortBegin(arr: HTMLCollectionOf<HTMLElement>, delay:number) {
         let l = arr.length;
         for (let n = 0; n < l; n++) {
-            arr[0].setAttribute("style", "fill: #515A5A;");
+            this.setBlockColor(arr[0], this.trackingColor);
             if (n < l - 1) {
                 for (let i = 0; i < l - n - 1; i++) {
                     // Keep track the running block
@@ -185,14 +200,12 @@ class BubbleSortGraph extends SortGraph {
                     if (parseInt(arr[i].id) > parseInt(arr[i + 1].id)) {
                         VS.swap(arr[i], arr[i+1]);
                     } else {
-                        arr[i].removeAttribute("style");
-                        arr[i+1].setAttribute("style", "fill: #515A5A;");
+                        this.removeBlockColor(arr[i]);
+                        this.setBlockColor(arr[i+1], this.trackingColor);
                     }
                     // Return default color at the end of the inner iteration
                     if (i === l - n - 2) {
-                        await new Promise<void>((resolve) =>
-                            setTimeout(() => resolve(), delay)
-                        );
+                        await VS.timeout((SortControl.abortController as AbortController).signal, delay);
                         arr[i+1].removeAttribute("style");
                     }
                 }
@@ -200,12 +213,10 @@ class BubbleSortGraph extends SortGraph {
                 await VS.timeout((SortControl.abortController as AbortController).signal, delay);
                 arr[0].removeAttribute("style");
             }
-            await new Promise<void>((resolve) =>
-                setTimeout(() => resolve(), delay)
-            );
+            await VS.timeout((SortControl.abortController as AbortController).signal, delay);
             if (n === l - 1) {
-                Utility.enableControl();
                 await VS.traverseBlocks((SortControl.abortController as AbortController).signal, l, arr);
+                Utility.enableControl();
                 SortControl.abortController = null;
             }
         }
@@ -214,6 +225,10 @@ class BubbleSortGraph extends SortGraph {
 
 
 class HeapSortGraph extends SortGraph {
+    public trackingColor: string = '#72A1EF';
+    public largestPerHeapifyColor: string = '#81C784';
+    public indexPerHeapifyColor: string = '#FFEE58';
+
     constructor(nb: number, w: number, h: number) {
         super(nb, w, h);
     }
@@ -225,7 +240,7 @@ class HeapSortGraph extends SortGraph {
      *  -   Current index per heapify block color: #FFEE58
     */
     override sort(): void {
-        console.log("Heap sort")
+        console.log("Visualize heap sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
 
@@ -240,20 +255,14 @@ class HeapSortGraph extends SortGraph {
         for (let i = arr.length/2 - 1; i >= 0; i--) {
             // arr[0].setAttribute("style", "fill: #72A1EF;";)
             // Each call to heapify need to be delay {delay}ms
-            await new Promise((resolve) => {
-                const timeout = setTimeout(() => {
-                    resolve(this.heapify(arr, arr.length, i, delay));
-                }, delay);
-                (SortControl.abortController as AbortController).signal.addEventListener('abort', () => {
-                    clearTimeout(timeout);
-                });
-            });
+            await VS.timeoutWithCallback((SortControl.abortController as AbortController).signal,
+                delay, this.heapify(arr, arr.length, i, delay));
         }
         // Start from the last index
         // Call heapify func until index = 0
         let l = arr.length - 1;
         while (l > 0) {
-            arr[0].setAttribute("style", "fill: #72A1EF;");
+            this.setBlockColor(arr[0], this.trackingColor);
             // Each call to heapify need to be delay {delay}ms, maintain the maxHeap-like structure
             await new Promise((resolve) => {
                 const timeout = setTimeout(() => {
@@ -264,7 +273,7 @@ class HeapSortGraph extends SortGraph {
                     clearTimeout(timeout);
                 });
             });
-            arr[l].removeAttribute("style");
+            this.removeBlockColor(arr[l]);
             l--;
         }
         await VS.traverseBlocks((SortControl.abortController as AbortController).signal, arr.length, arr);
@@ -277,7 +286,7 @@ class HeapSortGraph extends SortGraph {
                           curIndex: number, delay: number) {
         // Take the curIndex (root) as largestIndex
         let largestIndex = curIndex;
-        arr[largestIndex].setAttribute("style", "fill: #FFEE58;");
+        this.setBlockColor(arr[largestIndex], this.indexPerHeapifyColor);
         // Take left and right node indices
         let leftIndex = curIndex*2 + 1;
         let rightIndex = curIndex*2 + 2;
@@ -293,7 +302,7 @@ class HeapSortGraph extends SortGraph {
         }
         // Delay for {delay} ms
         await VS.timeout((SortControl.abortController as AbortController).signal, delay);
-        arr[largestIndex].setAttribute("style", "fill: #81C784;");
+        this.setBlockColor(arr[largestIndex], this.largestPerHeapifyColor);
         // If the largestIndex is not a root
         // Swap with root
         // Call recurively to the affected subtree
@@ -303,21 +312,15 @@ class HeapSortGraph extends SortGraph {
 
             await VS.timeout((SortControl.abortController as AbortController).signal, delay);
             // Remove color
-            arr[curIndex].removeAttribute("style");
-            arr[largestIndex].removeAttribute("style");
-            await new Promise((resolve) => {
-                const timeout = setTimeout(() => {
-                    resolve(this.heapify(arr, heapSize, largestIndex, delay));
-                }, delay);
-                (SortControl.abortController as AbortController).signal.addEventListener('abort', () => {
-                    clearTimeout(timeout);
-                });
-            });
+            this.removeBlockColor(arr[curIndex]);
+            this.removeBlockColor(arr[largestIndex]);
+            await VS.timeoutWithCallback((SortControl.abortController as AbortController).signal,
+                delay, this.heapify(arr, heapSize, largestIndex, delay));
         }
         // Remove color
         else {
-            arr[curIndex].removeAttribute("style");
-            arr[largestIndex].removeAttribute("style");
+            this.removeBlockColor(arr[curIndex]);
+            this.removeBlockColor(arr[largestIndex]);
         }
     }
 }
@@ -325,6 +328,10 @@ class HeapSortGraph extends SortGraph {
 
 class MergeSortGraph extends SortGraph {
     private DELAY: number = 0;
+    public midBlockColor: string = '#72A1EF';
+    public startBlockColor: string = '#81C784';
+    public endBlockColor: string = '#FFEE58';
+    public mergeBlockColor: string = '#515A5A';
 
     constructor(nb: number, w: number, h: number) {
         super(nb, w, h);
@@ -335,9 +342,10 @@ class MergeSortGraph extends SortGraph {
      *  -   Mid block: #72A1EF
      *  -   Start block: #81C784
      *  -   End block: #FFEE58
+     *  -   Merge block: #515A5A
      */
     override sort(): void {
-        console.log("Merge sort")
+        console.log("Visualize merge sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         this.DELAY = VS.getDelay();
         // Disable control form
@@ -349,20 +357,20 @@ class MergeSortGraph extends SortGraph {
     private async sortBegin(arr: HTMLCollectionOf<HTMLElement>, start: number, end: number) {
         if (start < end) {
             await VS.timeout((SortControl.abortController as AbortController).signal, this.DELAY);
-            arr[start].setAttribute("style", "fill: #81C784; ");
-            arr[end].setAttribute("style", "fill: #FFEE58; ");
+            this.setBlockColor(arr[start], this.startBlockColor);
+            this.setBlockColor(arr[end], this.endBlockColor);
             // Init start, end, mid var
             let mid = Math.floor(start + (end - start) / 2);
-            arr[mid].setAttribute("style", "fill: #72A1EF; ");
+            this.setBlockColor(arr[mid], this.midBlockColor);
             // Perform merge sort in 2 halves
             await this.sortBegin(arr, start, mid);
             await this.sortBegin(arr, mid + 1, end)
             // Call merge
-            await this.merge(arr, start, mid, end)
             await VS.timeout((SortControl.abortController as AbortController).signal, this.DELAY);
-            arr[start].removeAttribute("style");
-            arr[mid].removeAttribute("style");
-            arr[end].removeAttribute("style");
+            await this.merge(arr, start, mid, end)
+            this.removeBlockColor(arr[start]);
+            this.removeBlockColor(arr[mid]);
+            this.removeBlockColor(arr[end]);
         }
         if (start === 0 && end === arr.length - 1) {
             await VS.traverseBlocks((SortControl.abortController as AbortController).signal,
@@ -388,6 +396,7 @@ class MergeSortGraph extends SortGraph {
         // Else assign copyArr[i] to arr
         let i = left, j = mid+1;
         for (let k = left; k <= right; k++) {
+            this.setBlockColor(arr[k], this.mergeBlockColor);
             if (i > mid) {
                 // arr[k] = arrCopy[j];
                 this.modifyBlock(arr[k], arrCopy[j].height, arrCopy[j].id)
@@ -405,6 +414,8 @@ class MergeSortGraph extends SortGraph {
                 this.modifyBlock(arr[k], arrCopy[i].height, arrCopy[i].id)
                 i++;
             }
+            await VS.timeout((SortControl.abortController as AbortController).signal, this.DELAY);
+            this.removeBlockColor(arr[k]);
         }
     }
 
@@ -416,6 +427,10 @@ class MergeSortGraph extends SortGraph {
 
 
 class QuickSortGraph extends SortGraph {
+    public pivotBlockColor: string = '#72A1EF';
+    public jthBlockColor: string = '#81C784';
+    public ithBlockColor: string = '#FFEE58';
+
     constructor(nb: number, w: number, h: number) {
         super(nb, w, h);
     }
@@ -427,7 +442,7 @@ class QuickSortGraph extends SortGraph {
      *  -   ith block (partition): #FFEE58
      */
     override sort(): void {
-        console.log("Quick sort")
+        console.log("Visualize quick sort")
         let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
         let speed = VS.getDelay();
         // Disable control form
@@ -461,31 +476,80 @@ class QuickSortGraph extends SortGraph {
 
     private async partition(delay: number, arr: HTMLCollectionOf<HTMLElement>,
                             low: number, high: number) {
-        arr[high].setAttribute("style", "fill: #72A1EF; ");
+        this.setBlockColor(arr[high], this.pivotBlockColor);
         let i = low-1;
         for (let j = low; j < high; j++) {
-            arr[j].setAttribute("style", "fill: #81C784; ");
+            this.setBlockColor(arr[j], this.jthBlockColor);
             if (parseInt(arr[j].id) < parseInt(arr[high].id)) {
-                if (i >= 0) arr[i].removeAttribute("style");
+                if (i >= 0) this.removeBlockColor(arr[i]);
                 i++;
-                if (i != j) arr[i].setAttribute("style", "fill: #FFEE58; ");
+                if (i != j) this.setBlockColor(arr[i], this.ithBlockColor);
                 await VS.timeoutWithCallback((SortControl.abortController as AbortController).signal, delay,
                                             VS.swap(arr[i], arr[j]));
-                arr[i].setAttribute("style", "fill: #FFEE58; ");
-                arr[j].setAttribute("style", "fill: #81C784; ");
+                this.setBlockColor(arr[i], this.ithBlockColor);
+                this.setBlockColor(arr[j], this.jthBlockColor);
             } else {
                 await VS.timeout((SortControl.abortController as AbortController).signal, delay);
             }
-            arr[j].removeAttribute("style");
+            this.removeBlockColor(arr[j]);
         }
-        if (i >= 0) arr[i].removeAttribute("style");
-        arr[i+1].setAttribute("style", "fill: #72A1EF; ");
+        if (i >= 0) this.removeBlockColor(arr[i]);
+        this.setBlockColor(arr[i+1], this.pivotBlockColor);
         // Swap the high (pivot) with i+1
         await VS.timeoutWithCallback((SortControl.abortController as AbortController).signal, delay,
                                     VS.swap(arr[i+1], arr[high]))
-        arr[i+1].removeAttribute("style");
-        arr[high].removeAttribute("style");
+        this.removeBlockColor(arr[i+1]);
+        this.removeBlockColor(arr[high]);
+
         return i+1;
+    }
+}
+
+
+class InsertionSortGraph extends SortGraph {
+    public curBlockColor: string;
+    public prevBlockColor: string;
+
+    constructor(nb: number, w: number, h: number) {
+        super(nb, w, h);
+        this.curBlockColor = "#81C784";
+        this.prevBlockColor = "#FFEE58";
+    }
+
+    override sort(): void {
+        console.log("Visualize insertion sort");
+        let arr = document.getElementsByClassName("block") as HTMLCollectionOf<HTMLElement>;
+        let speed = VS.getDelay();
+        Utility.disableControl();
+        SortControl.abortController = new AbortController();
+        this.sortBegin(speed, arr);
+    }
+
+    private async sortBegin(delay: number, arr: HTMLCollectionOf<HTMLElement>) {
+        for (let i = 1; i < arr.length; i++) {
+            await VS.timeout((SortControl.abortController as AbortController).signal, delay);
+
+            let tmpIdx = i;
+            this.setBlockColor(arr[i], this.curBlockColor);
+            while (tmpIdx > 0 && parseInt(arr[tmpIdx].id) < parseInt(arr[tmpIdx-1].id)) {
+                this.setBlockColor(arr[tmpIdx-1], this.prevBlockColor);
+                await VS.timeout((SortControl.abortController as AbortController).signal, delay);
+
+                VS.swap(arr[tmpIdx], arr[tmpIdx-1]);
+
+                await VS.timeout((SortControl.abortController as AbortController).signal, delay);
+                this.removeBlockColor(arr[tmpIdx]);
+                tmpIdx--;
+            }
+            await VS.timeout((SortControl.abortController as AbortController).signal, delay);
+            this.removeBlockColor(arr[tmpIdx]);
+
+            if (i === arr.length-1) {
+                await VS.traverseBlocks((SortControl.abortController as AbortController).signal, arr.length, arr);
+                Utility.enableControl();
+                SortControl.abortController = null;
+            }
+        }
     }
 }
 
@@ -596,6 +660,17 @@ export class QuickSortFactory extends BaseSortFactory {
 
     override createGraph(): SortGraph {
         return new QuickSortGraph(this.numBlocks, this.width, this.height);
+    }
+}
+
+
+export class InsertionSortFactory extends BaseSortFactory {
+    constructor(numBlocks: number, width: number, height: number) {
+        super(numBlocks, width, height);
+    }
+
+    override createGraph(): SortGraph {
+        return new InsertionSortGraph(this.numBlocks, this.width, this.height);
     }
 }
 

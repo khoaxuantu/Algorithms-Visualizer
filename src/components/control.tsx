@@ -3,13 +3,23 @@
 import { Utility } from "@/app/util";
 import { BaseSortFactory, SortGraph } from "./canvas/sort_graph";
 
-type AlgoCategory = "sort" | "search"
+type AlgoCategory = "sort" | "search";
+type DrawHandler = {
+    click: () => void,
+    enter: (this: HTMLElement, ev: SubmitEvent) => any
+};
 
-interface controlProps {
+interface ControlProps {
     category: AlgoCategory
 }
 
-function ControlBox(props: controlProps): JSX.Element {
+export interface HandlerGroup {
+    start: () => void,
+    reset: () => void,
+    draw: DrawHandler,
+}
+
+function ControlBox(props: ControlProps): JSX.Element {
     let Control = decideControlBox(props.category);
 
     return (
@@ -73,11 +83,15 @@ export class SortControl {
      * Add all needed control handler: reset, draw
      * @param factory - current graph factory
      * @param setGraph - a set state function using for setting graph
+     *
+     * @returns HandlerGroup - A remember handler group for clean up later
      */
-    static addHandler(factory: BaseSortFactory, graph: SortGraph, setGraph: any) {
-        this.addResetHandler(factory, setGraph);
-        this.addDrawHandler(factory, setGraph);
-        return this.addStartHandler(graph);
+    static addHandler(factory: BaseSortFactory, graph: SortGraph, setGraph: any): HandlerGroup {
+        return {
+            reset: this.addResetHandler(factory, setGraph),
+            start: this.addStartHandler(graph),
+            draw: this.addDrawHandler(factory, setGraph),
+        };
     }
 
     static addStartHandler(graph: SortGraph) {
@@ -89,19 +103,17 @@ export class SortControl {
         return handler;
     }
 
-    static removeStartHandler(handler: () => void) {
-        const playBtn = document.getElementById('play') as HTMLElement;
-        playBtn?.removeEventListener("click", handler);
-    }
-
     static addResetHandler(factory: BaseSortFactory, setGraph: any) {
         const resetBtn = document.getElementById('reset') as HTMLElement;
-        resetBtn.addEventListener("click", () => {
+        const handler = () => {
             this.checkAbortController();
             this.resetGraphColor();
             setGraph(factory.createGraph());
             Utility.enableControl();
-        })
+            // console.log("🚀 ~ file: control.tsx:105 ~ SortControl ~ resetBtn.addEventListener ~ click")
+        }
+        resetBtn.addEventListener("click", handler);
+        return handler;
     }
 
     private static resetGraphColor() {
@@ -114,12 +126,15 @@ export class SortControl {
     static addDrawHandler(factory: BaseSortFactory, setGraph: any) {
         const submitSize = document.getElementById("submitSize") as HTMLElement;
         submitSize.addEventListener("click", handler);
-        (document.getElementById('control') as HTMLElement).addEventListener("submit", (e) => {
+        (document.getElementById('control') as HTMLElement).addEventListener("submit", handlerWithPreventDefaut);
+
+        function handlerWithPreventDefaut(e: SubmitEvent) {
             e.preventDefault();
             handler();
-        });
+        }
 
         function handler() {
+            // console.log("🚀 ~ file: control.tsx:120 ~ SortControl ~ draw")
             const newBlocks = parseInt((document.getElementById("inputSize") as HTMLInputElement).value);
             if (!validateBlocks(newBlocks)) return;
             factory.blocks = newBlocks;
@@ -133,6 +148,34 @@ export class SortControl {
             }
             return true
         }
+
+        return {
+            click: handler,
+            enter: handlerWithPreventDefaut
+        };
+    }
+
+    static removeHandler(handlerSnapshot: HandlerGroup) {
+        if (handlerSnapshot !== undefined) {
+            this.removeStartHandler(handlerSnapshot.start);
+            this.removeDrawHandler(handlerSnapshot.draw);
+            this.removeResetHandler(handlerSnapshot.reset);
+        }
+    }
+
+    private static removeStartHandler(handler: () => void) {
+        const playBtn = document.getElementById('play') as HTMLElement;
+        playBtn?.removeEventListener("click", handler);
+    }
+
+    private static removeResetHandler(handler: () => void) {
+        const resetBtn = document.getElementById('reset') as HTMLElement;
+        resetBtn?.removeEventListener("click", handler);
+    }
+
+    private static removeDrawHandler(handler: DrawHandler) {
+        (document.getElementById("submitSize") as HTMLElement)?.removeEventListener("click", handler.click);
+        (document.getElementById('control') as HTMLElement)?.removeEventListener("submit", handler.enter);
     }
 
     private static checkAbortController() {

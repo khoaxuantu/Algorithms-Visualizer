@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BubbleSortFactory, SortGraph, getGraphSize } from "@/components/canvas/sort_graph";
-import { SortControl } from "@/components/control";
+import { HandlerGroup, SortControl } from "@/components/control";
 
 
 export default function BubbleSortDetail() {
@@ -15,7 +15,7 @@ export default function BubbleSortDetail() {
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;
         let createdGraph: SortGraph;
-        let handler: () => void;
+        let handler: HandlerGroup;
         if (size !== null && svgWidth > 0) {
             const factory = new BubbleSortFactory(parseInt(size.value), svgWidth, svgHeight);
             createdGraph = factory.createGraph();
@@ -25,7 +25,7 @@ export default function BubbleSortDetail() {
         getGraphSize(setSvgSize);
 
         return () => {
-            SortControl.removeStartHandler(handler);
+            SortControl.removeHandler(handler);
         }
     }, [svgWidth, svgHeight]);
 

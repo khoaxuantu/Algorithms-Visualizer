@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MergeSortFactory, SortGraph, getGraphSize } from "@/components/canvas/sort_graph";
-import { SortControl } from "@/components/control";
+import { HandlerGroup, SortControl } from "@/components/control";
 
 
 export default function MergeSortDetail() {
@@ -15,7 +15,7 @@ export default function MergeSortDetail() {
     useEffect(() => {
         const size = document.getElementById("inputSize") as HTMLInputElement;
         let createdGraph: SortGraph;
-        let handlerSnapshot: () => void;
+        let handlerSnapshot: HandlerGroup;
         if (size !== null && svgWidth > 0) {
             const factory = new MergeSortFactory(parseInt(size.value), svgWidth, svgHeight);
             createdGraph = factory.createGraph();
@@ -25,7 +25,7 @@ export default function MergeSortDetail() {
         getGraphSize(setSvgSize);
 
         return () => {
-            SortControl.removeStartHandler(handlerSnapshot);
+            SortControl.removeHandler(handlerSnapshot);
         }
     }, [svgWidth, svgHeight]);
 

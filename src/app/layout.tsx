@@ -57,9 +57,9 @@ function BootstrapCDN(): JSX.Element {
         href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.3/dist/flatly/bootstrap.min.css"
         integrity="sha256-3LXKhyYmYxt+fGciLxN474K5Ycw5FXqQJDJpW54Q3XQ="
         crossOrigin="anonymous" />
-      <Script crossOrigin='anonymous'
+      <script crossOrigin='anonymous'
         src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'
-        integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p'></Script>
+        integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p' async></script>
     </>
   )
 }
