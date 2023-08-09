@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import * as VS from '@/app/visualize_helpers';
+import * as VS from '@/helpers/visualize_helpers';
 import { SortControl } from "../control";
-import { Utility } from "@/app/util";
+import { Utility } from "@/helpers/util";
 
 /**
  * Implements of factory method for graph

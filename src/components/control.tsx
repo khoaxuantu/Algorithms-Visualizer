@@ -1,6 +1,6 @@
 'use client'
 
-import { Utility } from "@/app/util";
+import { Utility } from "@/helpers/util";
 import { BaseSortFactory, SortGraph } from "./canvas/sort_graph";
 
 type AlgoCategory = "sort" | "search";
