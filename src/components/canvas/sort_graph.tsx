@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
-import * as VS from '@/app/visualize_helpers';
+import * as VS from '@/helpers/visualize_helpers';
 import { SortControl } from "../control";
-import { Utility } from "@/app/util";
+import { Utility } from "@/helpers/util";
+import SFX from "../sfx";
 
 /**
  * Implements of factory method for graph
@@ -47,7 +48,7 @@ export abstract class SortGraph {
         let arr = this.createBlockList();
 
         return (
-            <g key={Date.now().toString()}>
+            <>
                 {arr.map((num, index) => {
                     let curWidth = consumedWidth;
                     consumedWidth += boxWidth;
@@ -57,7 +58,7 @@ export abstract class SortGraph {
                                 boxWidth={boxWidth}
                                 boxHeight={this.boxHeight(num)} />
                 })}
-            </g>
+            </>
         );
     }
 
@@ -422,6 +423,7 @@ class MergeSortGraph extends SortGraph {
     private modifyBlock(block: HTMLElement, updatedHeight: string, updatedId: string) {
         block.setAttribute("height", updatedHeight);
         block.setAttribute("id", updatedId);
+        SFX.init().play();
     }
 }
 

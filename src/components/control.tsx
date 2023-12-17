@@ -1,7 +1,8 @@
 'use client'
 
-import { Utility } from "@/app/util";
+import { Utility } from "@/helpers/util";
 import { BaseSortFactory, SortGraph } from "./canvas/sort_graph";
+import { SFXOptions } from "./sfx";
 
 type AlgoCategory = "sort" | "search";
 type DrawHandler = {
@@ -61,7 +62,7 @@ function SortControlBox() {
             <div className="p-2" id="speedControl">
                 <label htmlFor="speedSlider">Speed</label>
                 <input type="range" className="form-range" min="0" max="100" step="5" defaultValue="50" id="speedSlider" data-bs-toggle="popover" data-bs-trigger="hover focus" />
-                <div className="btn-group w-100" role="group" aria-label="Speed Option">
+                <div id="spd-opt" className="btn-group w-100" role="group" aria-label="Speed Option">
                     <input type="radio" className="btn-check" name="spd-opt" id="x1" value="1" autoComplete="off" defaultChecked />
                     <label className="btn btn-outline-light" htmlFor="x1">x1</label>
                     <input type="radio" className="btn-check" name="spd-opt" id="x10" value="10" autoComplete="off" />
@@ -70,6 +71,7 @@ function SortControlBox() {
                     <label className="btn btn-outline-light" htmlFor="x100">x100</label>
                 </div>
             </div>
+            <SFXOptions />
         </>
     )
 }
@@ -145,7 +147,7 @@ export class SortControl {
             if (blocks > SortControl.maxBlocks) {
                 alert(`Value must be less than or equal to ${SortControl.maxBlocks}`);
                 return false;
-            } else if (blocks < 1) {
+            } else if (!blocks || blocks < 1) {
                 alert(`Value must be larger than 0`);
                 return false;
             }
