@@ -47,7 +47,7 @@ export abstract class SortGraph {
         let arr = this.createBlockList();
 
         return (
-            <g key={Date.now().toString()}>
+            <>
                 {arr.map((num, index) => {
                     let curWidth = consumedWidth;
                     consumedWidth += boxWidth;
@@ -57,7 +57,7 @@ export abstract class SortGraph {
                                 boxWidth={boxWidth}
                                 boxHeight={this.boxHeight(num)} />
                 })}
-            </g>
+            </>
         );
     }
 

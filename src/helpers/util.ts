@@ -1,23 +1,23 @@
 export class Utility {
-    private static enableFirstNode: string[] = [
-        "sizeControl", "speedControl", "play"
+    private static enableFirstNodes: string[] = [
+        "sizeControl", "speedControl", "play", "spd-opt"
     ];
-    private static disableFirstNode: string[] = ['reset'];
+    private static disableFirstNodes: string[] = ['reset'];
 
     static enableControl() {
-        this.enableFirstNode.forEach(name => {
+        this.enableFirstNodes.forEach(name => {
             new EnableNode(name).changeActiveState();
         })
-        this.disableFirstNode.forEach(name => {
+        this.disableFirstNodes.forEach(name => {
             new DisableNode(name).changeActiveState();
         })
     }
 
     static disableControl() {
-        this.enableFirstNode.forEach(name => {
+        this.enableFirstNodes.forEach(name => {
             new DisableNode(name).changeActiveState();
         })
-        this.disableFirstNode.forEach(name => {
+        this.disableFirstNodes.forEach(name => {
             new EnableNode(name).changeActiveState();
         })
     }
@@ -83,5 +83,19 @@ class EnableNode extends ActiveStateHandler {
     override changeActiveState(): void {
         if (this.node.children.length > 0) this.endableByGroup();
         else this.endableById();
+    }
+}
+
+/**
+ * Get speed factor from the option group
+ * @returns speed factor option: x1, x10, x100
+ */
+export function getSpeedOption() {
+    let speedOptList = document.getElementsByName('spd-opt');
+    for (let i = 0; i < speedOptList.length; i++) {
+        const curSpeedOpt = speedOptList[i] as HTMLInputElement;
+        if (curSpeedOpt.checked) {
+            return parseInt(curSpeedOpt.value);
+        }
     }
 }

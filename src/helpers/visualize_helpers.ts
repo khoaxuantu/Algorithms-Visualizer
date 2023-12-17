@@ -1,8 +1,8 @@
-/**
- *  Implement general helper functions
- */
+import SFX from "@/components/sfx";
+import { getSpeedOption } from "./util";
+
 const SLOWEST_SPEED: number = 1000;
-let CAN_PLAY_SFX: boolean = true;
+
 /**
  * Calculate delay from the given speed slider
  * @returns delay: number
@@ -12,7 +12,6 @@ export function getDelay(): number {
     let delay = 10;
 
     let speedOpt = getSpeedOption() as number;
-    CAN_PLAY_SFX = speedOpt < 100;
 
     let inputSpeed = 0.99; // To prevent delay being 0
     let slider = document.getElementById("speedSlider") as HTMLInputElement;
@@ -23,20 +22,6 @@ export function getDelay(): number {
     delay = ((1 - inputSpeed) * SLOWEST_SPEED) / speedOpt;
 
     return delay;
-}
-
-/**
- * Get speed factor from the option group
- * @returns speed factor option: x1, x10, x100
- */
-function getSpeedOption() {
-    let speedOptList = document.getElementsByName('spd-opt');
-    for (let i = 0; i < speedOptList.length; i++) {
-        const curSpeedOpt = speedOptList[i] as HTMLInputElement;
-        if (curSpeedOpt.checked) {
-            return parseInt(curSpeedOpt.value);
-        }
-    }
 }
 
 
@@ -54,7 +39,7 @@ export function swap(nodeA: any, nodeB: any) {
 
     // Move `nodeB` to before the sibling of `nodeA`
     parentA.insertBefore(nodeB, siblingA);
-    if (CAN_PLAY_SFX) playSFX();
+    SFX.init().play();
 }
 
 /**
@@ -122,14 +107,4 @@ export function timeoutWithCallback(abortSignal: any, delay: number, callback: a
             clearTimeout(timeout);
         });
     });
-}
-
-/**
- * A function to play sfx
- */
-export function playSFX() {
-    // const audio = new Audio('/sfx/back-button-click.wav');
-    const audio = new Audio('/sfx/back-button-hover.wav');
-    audio.volume = 0.05;
-    audio.play();
 }
