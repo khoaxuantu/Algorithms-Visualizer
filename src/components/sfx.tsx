@@ -136,7 +136,7 @@ export function SFXOptions() {
         })}
       </select>
       {!canPlaySFX && (
-        <div>
+        <div className="text-danger">
           Your current speed option is too high, to protect your ears the sound
           is disabled
         </div>
