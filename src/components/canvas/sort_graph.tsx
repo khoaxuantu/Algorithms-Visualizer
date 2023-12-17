@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import * as VS from '@/helpers/visualize_helpers';
 import { SortControl } from "../control";
 import { Utility } from "@/helpers/util";
+import SFX from "../sfx";
 
 /**
  * Implements of factory method for graph
@@ -422,6 +423,7 @@ class MergeSortGraph extends SortGraph {
     private modifyBlock(block: HTMLElement, updatedHeight: string, updatedId: string) {
         block.setAttribute("height", updatedHeight);
         block.setAttribute("id", updatedId);
+        SFX.init().play();
     }
 }
 
