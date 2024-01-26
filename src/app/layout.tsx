@@ -1,8 +1,8 @@
 import '../css/styles.css';
 import NavBar from '@/components/navbar';
-import Script from 'next/script';
 import Copyright from './copyright';
 import { Metadata } from 'next';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: 'Main',
@@ -41,6 +41,7 @@ export default function RootLayout({
           {children}
         </div>
         <Copyright />
+        <SpeedInsights />
       </body>
     </html>
   )
