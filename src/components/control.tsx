@@ -1,7 +1,7 @@
 'use client'
 
 import { Utility } from "@/helpers/util";
-import { BaseSortFactory, SortGraph } from "./canvas/sort_graph";
+import { BaseSortFactory, SortGraph } from "./canvas/sort/sort_graph";
 import { SFXOptions } from "./sfx";
 
 type AlgoCategory = "sort" | "search";

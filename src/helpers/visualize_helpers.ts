@@ -34,12 +34,13 @@ export function swap(nodeA: any, nodeB: any) {
     const parentA = nodeA.parentNode;
     const siblingA = nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
 
+    SFX.init().play();
+    
     // Move `nodeA` to before the `nodeB`
     nodeB.parentNode.insertBefore(nodeA, nodeB);
 
     // Move `nodeB` to before the sibling of `nodeA`
     parentA.insertBefore(nodeB, siblingA);
-    SFX.init().play();
 }
 
 /**
