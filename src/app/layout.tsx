@@ -2,7 +2,6 @@ import '../css/styles.css';
 import NavBar from '@/components/navbar';
 import Copyright from './copyright';
 import { Metadata } from 'next';
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: 'Main',
@@ -11,10 +10,6 @@ export const metadata: Metadata = {
   authors: {
     name: 'Xuan Khoa Tu Nguyen',
     url: 'https://xuankhoatu.com'
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
   },
   openGraph: {
     title: 'Algorithm Visualizer | Main',
@@ -41,7 +36,6 @@ export default function RootLayout({
           {children}
         </div>
         <Copyright />
-        <SpeedInsights />
       </body>
     </html>
   )
